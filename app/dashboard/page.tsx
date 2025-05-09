@@ -1,12 +1,17 @@
-import { useState } from "react";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import Greeting from "../components/greeting";
 
 export default function Dashboard() {
+  const session = getServerSession();
+  if (!session) {
+    return <div>Please log in to access the dashboard.</div>;
+  }
   return (
     <div className="min-h-screen bg-gray-100">
       {/* side bar */}
-      <div className="flex pt-20 min-h-screen">
-        <aside className="fixed w-64 bg-white shadow-md h-[calc(100vh-5rem)] overflow-y-auto">
+      <div className="flex pt-15 min-h-screen">
+        <aside className="fixed w-64 bg-white shadow-md h-[calc(100vh-3rem)] overflow-y-auto">
           <div className="py-5">
             <ul>
               <li className="mb-1">
@@ -139,9 +144,7 @@ export default function Dashboard() {
 
         <main className="flex-1 ml-64 p-8">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-2xl font-bold text-gray-800">
-              Welcome back, John!
-            </h1>
+            <Greeting />
             <div className="flex gap-4">
               <button className="px-5 py-2 bg-white text-blue-900 border border-blue-900 rounded">
                 Import Content

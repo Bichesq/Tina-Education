@@ -5,7 +5,6 @@ import React from "react";
 const Home: React.FC = () => {
   return (
     <div className="bg-gray-100 py-6 min-h-screen">
-    
       {/* Secondary Navigation */}
       <div className="bg-white border-t border-b border-gray-200">
         <div className="w-11/12 max-w-6xl mx-auto">
@@ -40,7 +39,7 @@ const Home: React.FC = () => {
           <div className="max-w-lg mx-auto my-8">
             <input
               type="text"
-              className="w-full px-4 py-3 rounded-full border-none text-base text-gray-800"
+              className="w-full px-4 py-3 rounded-full text-base text-gray-800 bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Search Authors, Books and Journals"
             />
           </div>
@@ -79,15 +78,15 @@ const Home: React.FC = () => {
       <section className="py-12">
         <div className="w-11/12 max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-gray-200 p-8 rounded hover:transform hover:-translate-y-1 transition-transform duration-300 cursor-pointer">
+            <div className="bg-gray-400 p-8 rounded hover:transform hover:-translate-y-1 transition-transform duration-300 cursor-pointer">
               <h3 className="text-lg font-medium">Custom eBook Library</h3>
             </div>
-            <div className="bg-gray-200 p-8 rounded hover:transform hover:-translate-y-1 transition-transform duration-300 cursor-pointer">
+            <div className="bg-gray-400 p-8 rounded hover:transform hover:-translate-y-1 transition-transform duration-300 cursor-pointer">
               <h3 className="text-lg font-medium">
                 Peer-to-Peer Review Process
               </h3>
             </div>
-            <div className="bg-gray-200 p-8 rounded hover:transform hover:-translate-y-1 transition-transform duration-300 cursor-pointer">
+            <div className="bg-gray-400 p-8 rounded hover:transform hover:-translate-y-1 transition-transform duration-300 cursor-pointer">
               <h3 className="text-lg font-medium">Writing Resources</h3>
             </div>
           </div>
@@ -98,22 +97,22 @@ const Home: React.FC = () => {
       <section className="py-8">
         <div className="w-11/12 max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5">
-            <div className="flex bg-gray-100">
+            <div className="flex bg-gray-100 text-gray-800">
               <div className="w-3/5">
                 <Image
-                  src="/../public/images/The Marital Journey cover.jpg"
                   className="w-full"
-                  width={35}
-                  height={45}
+                  src="/images/The Marital Journey cover.jpg"
                   alt="The Marital Journey"
+                  width={135}
+                  height={145}
                 />
               </div>
               <div className="w-2/5 self-center p-5">
-                <h3 className="font-medium">The Marital Journey cover</h3>
+                <h3 className="font-medium">The Marital Journey</h3>
                 <p>Nkwain Sam</p>
               </div>
             </div>
-            <div className="flex bg-gray-100">
+            <div className="flex bg-gray-100 text-gray-800">
               <div className="w-3/5 h-48 bg-teal-700"></div>
               <div className="w-2/5 self-center p-5">
                 <h3 className="font-medium">Title</h3>
