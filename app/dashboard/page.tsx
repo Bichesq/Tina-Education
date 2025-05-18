@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import Greeting from "../components/greeting";
 
-export default function Dashboard() {
-  const session = getServerSession();
+export default async function Dashboard() {
+  const session = await auth();
   if (!session) {
     return <div>Please log in to access the dashboard.</div>;
   }

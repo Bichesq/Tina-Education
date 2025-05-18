@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String             @id @default(cuid())
+  createdAt     DateTime        @default(now())
+  name          String?
+  firstName     String?
+  lastName      String?
+  email         String          @unique
+  password      String?
+  updatedAt     DateTime        @updatedAt
+  image         String?
+  emailVerified DateTime?
+  affiliation   String?
+  expertise     String?
+  reviews       String?
+  role          Role            @default(USER)
+  reviewer_id   String?
+  manuscripts   Manuscript[]
+  notifications Notifications[]
+  review        Review[]
+  accounts      Account[]
+  sessions       Session[]
+  publications   Publication[]
+  // Optional for WebAuthn support
+  Authenticator  Authenticator[]
+}
+
+model Manuscript {
+  id        String              @id @default(cuid())
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  title     String
+  abstract  String
+  content   String
+  status    ManuscriptStatus @default(DRAFT)
+  keywords  String
+  author_id String
+  user      User             @relation(fields: [author_id], references: [id])
+  reviews   Review[]
+}
+
+model Notifications {
+  id        String      @id @default(cuid())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  user_id   String
+  message   String
+  is_read   Boolean     @default(false)
+  user      User        @relation(fields: [user_id], references: [id])
+}
+
+model Review {
+  id            String          @id @default(cuid())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  content       String
+  manuscript_id String
+  reviewer_id   String
+  feedback      String?
+  score         Int?
+  status        ReviewStatus    @default(PENDING)
+  manuscript    Manuscript      @relation(fields: [manuscript_id], references: [id])
+  user          User            @relation(fields: [reviewer_id], references: [id])
+}
+
+
+model Publication {
+  id        String      @id @default(cuid())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  title     String
+  abstract  String?
+  content   String?
+  keywords  String?
+  cover    String?
+  author_id String
+  type      Pub_type    @default(EBOOK) 
+  user      User      @relation(fields: [author_id], references: [id])
+}
+
+model Account {
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  
+  access_token       String?  
+  expires_at         Int?     
+  token_type         String?  
+  scope              String?  
+  id_token           String?  
+  session_state      String?  
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+// Optional for WebAuthn support
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@id([userId, credentialID])
+}
+
+enum ManuscriptStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  ACCEPTED
+  REJECTED
+}
+
+enum ReviewStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  SUBMITTED
+}
+
+enum Role {
+  USER
+  ADMIN
+  REVIEWER
+}
+
+enum  Pub_type {
+  JOURNAL
+  ARTICLE
+  BOOK
+  EBOOK
+  AUDIOBOOK
+}
