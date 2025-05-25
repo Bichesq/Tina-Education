@@ -88,7 +88,7 @@ async function PublicationsList() {
           You haven't published any work yet. Start by creating and submitting your first manuscript.
         </p>
         <Link
-          href="/manuscripts"
+          href="/manuscripts/new"
           className="inline-flex items-center px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium"
         >
           Create New Manuscript
@@ -232,17 +232,19 @@ function PublicationsLoading() {
 
 export default function PublicationsPage() {
   return (
-    <div className="p-8">
+    <div className="p-8 min-h-full">
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">My Publications</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              My Publications
+            </h1>
             <p className="text-gray-600">
               Manage and view all your published academic work
             </p>
           </div>
           <Link
-            href="/manuscripts"
+            href="/manuscripts/new"
             className="inline-flex items-center px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium"
           >
             <span className="mr-2">+</span>
@@ -251,17 +253,22 @@ export default function PublicationsPage() {
         </div>
       </div>
 
-      <Suspense fallback={
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 animate-pulse">
-              <div className="w-12 h-12 bg-gray-200 rounded-lg mb-3"></div>
-              <div className="h-8 bg-gray-200 rounded mb-1 w-16"></div>
-              <div className="h-4 bg-gray-200 rounded w-24"></div>
-            </div>
-          ))}
-        </div>
-      }>
+      <Suspense
+        fallback={
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+            {[...Array(5)].map((_, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 animate-pulse"
+              >
+                <div className="w-12 h-12 bg-gray-200 rounded-lg mb-3"></div>
+                <div className="h-8 bg-gray-200 rounded mb-1 w-16"></div>
+                <div className="h-4 bg-gray-200 rounded w-24"></div>
+              </div>
+            ))}
+          </div>
+        }
+      >
         <PublicationStats />
       </Suspense>
 

@@ -32,14 +32,26 @@ function SidebarItem({ href, icon, label }: SidebarItemProps) {
 
 export default function Sidebar() {
   return (
-    <aside className="fixed w-64 bg-white shadow-md h-[calc(100vh-3rem)] overflow-y-auto">
+    <aside className="sticky w-64 bg-white shadow-md top-20 h-[calc(100vh-5rem)] overflow-y-auto border-r border-gray-200 flex-shrink-0">
       <div className="py-5">
         <ul>
           <SidebarItem href="/dashboard" icon="📊" label="Dashboard" />
-          <SidebarItem href="/dashboard/publications" icon="📚" label="My Publications" />
-          <SidebarItem href="/dashboard/manuscripts" icon="📝" label="Manuscripts" />
+          <SidebarItem
+            href="/dashboard/publications"
+            icon="📚"
+            label="My Publications"
+          />
+          <SidebarItem
+            href="/dashboard/manuscripts"
+            icon="📝"
+            label="Manuscripts"
+          />
           <SidebarItem href="/dashboard/reviews" icon="📋" label="Reviews" />
-          <SidebarItem href="/dashboard/analytics" icon="📈" label="Analytics" />
+          <SidebarItem
+            href="/dashboard/analytics"
+            icon="📈"
+            label="Analytics"
+          />
         </ul>
 
         <div className="mt-5 pt-5 border-t border-gray-200">
@@ -47,9 +59,21 @@ export default function Sidebar() {
             Collaboration
           </h3>
           <ul>
-            <SidebarItem href="/dashboard/collaborators" icon="👥" label="Co-authors" />
-            <SidebarItem href="/dashboard/messages" icon="💬" label="Messages" />
-            <SidebarItem href="/dashboard/notifications" icon="🔔" label="Notifications" />
+            <SidebarItem
+              href="/dashboard/collaborators"
+              icon="👥"
+              label="Co-authors"
+            />
+            <SidebarItem
+              href="/dashboard/messages"
+              icon="💬"
+              label="Messages"
+            />
+            <SidebarItem
+              href="/dashboard/notifications"
+              icon="🔔"
+              label="Notifications"
+            />
           </ul>
         </div>
 
@@ -58,10 +82,26 @@ export default function Sidebar() {
             Resources
           </h3>
           <ul>
-            <SidebarItem href="/dashboard/library" icon="📕" label="My Library" />
-            <SidebarItem href="/dashboard/tools" icon="🧰" label="Writing Tools" />
-            <SidebarItem href="/dashboard/calendar" icon="📅" label="Calendar" />
-            <SidebarItem href="/dashboard/settings" icon="⚙️" label="Settings" />
+            <SidebarItem
+              href="/dashboard/library"
+              icon="📕"
+              label="My Library"
+            />
+            <SidebarItem
+              href="/dashboard/tools"
+              icon="🧰"
+              label="Writing Tools"
+            />
+            <SidebarItem
+              href="/dashboard/calendar"
+              icon="📅"
+              label="Calendar"
+            />
+            <SidebarItem
+              href="/dashboard/settings"
+              icon="⚙️"
+              label="Settings"
+            />
           </ul>
         </div>
       </div>

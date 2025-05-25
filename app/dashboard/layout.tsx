@@ -13,12 +13,10 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="flex pt-15 min-h-screen">
+    <div className="bg-gray-100 pt-20">
+      <div className="flex min-h-[calc(100vh-5rem)]">
         <Sidebar />
-        <main className="flex-1 ml-64">
-          {children}
-        </main>
+        <div className="flex-1">{children}</div>
       </div>
     </div>
   );

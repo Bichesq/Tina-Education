@@ -33,6 +33,7 @@ model Manuscript {
   abstract  String
   content   String
   status    ManuscriptStatus @default(DRAFT)
+  type      Pub_type         @default(ARTICLE)
   keywords  String
   author_id String
   pdfFile   String           // Changed from Bytes to String to store Vercel Blob URL

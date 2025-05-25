@@ -7,7 +7,7 @@ import { Suspense } from "react";
 
 export default function Dashboard() {
   return (
-    <div className="p-8">
+    <div className="p-8 min-h-full">
       <div className="flex justify-between items-center mb-8">
         <Greeting />
         <div className="flex gap-4">
@@ -15,7 +15,7 @@ export default function Dashboard() {
             Import Content
           </button>
           <Link
-            href="/manuscripts"
+            href="/manuscripts/new"
             className="px-5 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-colors"
           >
             Create New
