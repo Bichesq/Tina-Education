@@ -7,7 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth();
   if (!session?.user?.id) {
@@ -16,7 +16,7 @@ export async function PATCH(
 
   try {
     const { action, reason } = await request.json();
-    const reviewId = params.id;
+    const { id: reviewId } = await params;
 
     // Validate action - for assignment response
     if (!["ACCEPT_ASSIGNMENT", "DECLINE_ASSIGNMENT"].includes(action)) {
@@ -71,7 +71,9 @@ export async function PATCH(
     });
 
     const actionText = action === "ACCEPT_ASSIGNMENT" ? "accepted" : "declined";
-    console.log(`📝 Review assignment ${actionText} by ${session.user.name}: ${review.manuscript.title}`);
+    console.log(
+      `📝 Review assignment ${actionText} by ${session.user.name}: ${review.manuscript.title}`
+    );
 
     // Create notification for manuscript author
     const notification = await prisma.notification.create({
@@ -84,7 +86,9 @@ export async function PATCH(
       },
     });
 
-    console.log(`✅ Notification created for author: ${review.manuscript.user.email}`);
+    console.log(
+      `✅ Notification created for author: ${review.manuscript.user.email}`
+    );
 
     // Send email notification to manuscript author
     try {
@@ -112,16 +116,21 @@ export async function PATCH(
               <p style="margin: 5px 0;"><strong>Status:</strong> <span style="color: ${isAccepted ? "#16a34a" : "#dc2626"}; font-weight: bold;">${isAccepted ? "ACCEPTED" : "DECLINED"}</span></p>
             </div>
 
-            ${reason ? `
+            ${
+              reason
+                ? `
               <div style="background-color: #f8fafc; padding: 15px; border-radius: 6px; margin: 20px 0;">
                 <h3 style="margin: 0 0 10px 0; color: #334155;">💬 ${isAccepted ? "Reviewer Note" : "Decline Reason"}</h3>
                 <p style="margin: 0; line-height: 1.6;">${reason}</p>
               </div>
-            ` : ""}
+            `
+                : ""
+            }
 
-            ${isAccepted ?
-              `<p><strong>Next Steps:</strong> The reviewer will now begin the review process. You will be notified when the review is completed.</p>` :
-              `<p><strong>Next Steps:</strong> We will assign another reviewer to your manuscript. You will be notified when a new reviewer accepts the assignment.</p>`
+            ${
+              isAccepted
+                ? `<p><strong>Next Steps:</strong> The reviewer will now begin the review process. You will be notified when the review is completed.</p>`
+                : `<p><strong>Next Steps:</strong> We will assign another reviewer to your manuscript. You will be notified when a new reviewer accepts the assignment.</p>`
             }
 
             <div style="text-align: center; margin: 30px 0;">
@@ -143,7 +152,10 @@ export async function PATCH(
         `,
       });
 
-      console.log(`✅ Email sent to author: ${review.manuscript.user.email}`, emailResult);
+      console.log(
+        `✅ Email sent to author: ${review.manuscript.user.email}`,
+        emailResult
+      );
     } catch (emailError) {
       console.error(`❌ Failed to send email to author:`, emailError);
       // Don't fail the request if email fails
