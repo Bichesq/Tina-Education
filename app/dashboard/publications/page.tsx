@@ -120,7 +120,9 @@ async function PublicationsList() {
                 </div>
               </div>
             </div>
-            <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPublicationTypeColor(publication.type)}`}>
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-medium ${getPublicationTypeColor(publication.type)}`}
+            >
               {publication.type}
             </span>
           </div>
@@ -134,7 +136,7 @@ async function PublicationsList() {
           {publication.keywords && (
             <div className="mb-4">
               <div className="flex flex-wrap gap-2">
-                {publication.keywords.split(',').map((keyword, index) => (
+                {publication.keywords.split(",").map((keyword, index) => (
                   <span
                     key={index}
                     className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm"
@@ -174,16 +176,6 @@ async function PublicationsList() {
               >
                 View Details
               </Link>
-              {publication.doi && (
-                <a
-                  href={`https://doi.org/${publication.doi}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-900 hover:text-blue-700 font-medium text-sm"
-                >
-                  DOI
-                </a>
-              )}
             </div>
           </div>
         </div>
