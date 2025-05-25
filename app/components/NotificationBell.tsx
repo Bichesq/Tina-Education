@@ -22,8 +22,16 @@ export function NotificationBell() {
         if (response.ok) {
           const data = await response.json();
           setUnreadCount(data.unreadCount || 0);
+        } else {
+          console.warn("Failed to fetch notification count:", response.status);
+          // Keep previous count on error
         }
       } catch (error) {
+        // Silently handle network errors to avoid console spam
+        if (error instanceof TypeError && error.message.includes("fetch")) {
+          // Network error - keep previous count
+          return;
+        }
         console.error("Failed to fetch notification count:", error);
       } finally {
         setIsLoading(false);

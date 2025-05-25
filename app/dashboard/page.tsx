@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import Greeting from "../components/greeting";
+import DashboardStats from "../components/dashboard/DashboardStats";
+import RecentPublications from "../components/dashboard/RecentPublications";
+import RecentActivities from "../components/dashboard/RecentActivities";
+import { Suspense } from "react";
 
 export default async function Dashboard() {
   const session = await auth();
@@ -158,142 +162,57 @@ export default async function Dashboard() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-            <div className="bg-white rounded-lg shadow-sm p-5">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center text-xl mb-4">
-                📚
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+                {[...Array(4)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="bg-white rounded-lg shadow-sm p-5 animate-pulse"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-gray-200 mb-4"></div>
+                    <div className="h-8 bg-gray-200 rounded mb-2 w-16"></div>
+                    <div className="h-4 bg-gray-200 rounded w-24"></div>
+                  </div>
+                ))}
               </div>
-              <h3 className="text-2xl text-gray-400 font-bold mb-1">15</h3>
-              <p className="text-gray-600 text-sm">Total Publications</p>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm p-5">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center text-xl mb-4">
-                👁️
-              </div>
-              <h3 className="text-2xl text-gray-400 font-bold mb-1">2,458</h3>
-              <p className="text-gray-600 text-sm">Total Views</p>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm p-5">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center text-xl mb-4">
-                ⬇️
-              </div>
-              <h3 className="text-2xl text-gray-400 font-bold mb-1">350</h3>
-              <p className="text-gray-600 text-sm">Downloads</p>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm p-5">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center text-xl mb-4">
-                📝
-              </div>
-              <h3 className="text-2xl text-gray-400 font-bold mb-1">3</h3>
-              <p className="text-gray-600 text-sm">Pending Reviews</p>
-            </div>
-          </div>
+            }
+          >
+            <DashboardStats />
+          </Suspense>
 
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-5">
-              <h2 className="text-xl font-bold text-gray-800">
-                Recent Publications
-              </h2>
-              <Link href="#" className="text-blue-900 font-medium">
-                View All
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <div className="h-40 bg-teal-700 relative">
-                  <div className="absolute top-2 right-2 px-3 py-1 bg-green-100 text-green-600 rounded-full text-xs font-medium">
-                    Published
-                  </div>
+          <Suspense
+            fallback={
+              <div className="mb-8">
+                <div className="flex justify-between items-center mb-5">
+                  <h2 className="text-xl font-bold text-gray-800">
+                    Recent Publications
+                  </h2>
+                  <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
                 </div>
-                <div className="p-5">
-                  <h3 className="font-bold text-gray-400 mb-2">
-                    Modern Teaching Methodologies
-                  </h3>
-                  <div className="flex justify-between text-gray-600 text-sm mb-4">
-                    <span>Mar 15, 2025</span>
-                    <span>786 views</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <Link
-                      href="#"
-                      className="text-blue-900 font-medium text-sm"
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {[...Array(3)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="bg-white rounded-lg shadow-sm overflow-hidden animate-pulse"
                     >
-                      Edit
-                    </Link>
-                    <Link
-                      href="#"
-                      className="text-blue-900 font-medium text-sm"
-                    >
-                      View Stats
-                    </Link>
-                  </div>
+                      <div className="h-40 bg-gray-200"></div>
+                      <div className="p-5">
+                        <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                        <div className="h-3 bg-gray-200 rounded w-3/4 mb-4"></div>
+                        <div className="flex justify-between">
+                          <div className="h-3 bg-gray-200 rounded w-12"></div>
+                          <div className="h-3 bg-gray-200 rounded w-16"></div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <div className="h-40 bg-teal-700 relative">
-                  <div className="absolute top-2 right-2 px-3 py-1 bg-amber-100 text-amber-600 rounded-full text-xs font-medium">
-                    Draft
-                  </div>
-                </div>
-                <div className="p-5">
-                  <h3 className="font-bold text-gray-400 mb-2">
-                    Digital Learning Platforms
-                  </h3>
-                  <div className="flex justify-between text-gray-600 text-sm mb-4">
-                    <span>Mar 10, 2025</span>
-                    <span>Last edited 2d ago</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <Link
-                      href="#"
-                      className="text-blue-900 font-medium text-sm"
-                    >
-                      Continue Editing
-                    </Link>
-                    <Link
-                      href="#"
-                      className="text-blue-900 font-medium text-sm"
-                    >
-                      Preview
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <div className="h-40 bg-teal-700 relative">
-                  <div className="absolute top-2 right-2 px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">
-                    Under Review
-                  </div>
-                </div>
-                <div className="p-5">
-                  <h3 className="font-bold text-gray-400 mb-2">
-                    Curriculum Development Strategies
-                  </h3>
-                  <div className="flex justify-between text-gray-600 text-sm mb-4">
-                    <span>Mar 8, 2025</span>
-                    <span>2 reviews pending</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <Link
-                      href="#"
-                      className="text-blue-900 font-medium text-sm"
-                    >
-                      Check Status
-                    </Link>
-                    <Link
-                      href="#"
-                      className="text-blue-900 font-medium text-sm"
-                    >
-                      View Comments
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            }
+          >
+            <RecentPublications />
+          </Suspense>
 
           <div className="mb-8">
             <div className="flex justify-between items-center mb-5">
@@ -386,89 +305,36 @@ export default async function Dashboard() {
             </div>
           </div>
 
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-5">
-              <h2 className="text-xl font-bold text-gray-800">
-                Recent Activities
-              </h2>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-sm p-5">
-              <div className="mt-4">
-                <div className="flex mb-4 pb-4 border-b border-gray-200">
-                  <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-900 mr-4">
-                    📝
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-400 mb-1">
-                      New Review Received
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      Dr. Sarah Johnson reviewed your paper "Modern Teaching
-                      Methodologies"
-                    </p>
-                    <span className="text-gray-400 text-xs mt-1 block">
-                      2 hours ago
-                    </span>
-                  </div>
+          <Suspense
+            fallback={
+              <div className="mb-8">
+                <div className="flex justify-between items-center mb-5">
+                  <h2 className="text-xl font-bold text-gray-800">
+                    Recent Activities
+                  </h2>
                 </div>
-
-                <div className="flex mb-4 pb-4 border-b border-gray-200">
-                  <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-900 mr-4">
-                    👥
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-400 mb-1">
-                      Co-author Request
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      Prof. Michael Chen wants to collaborate on "Digital
-                      Learning Platforms"
-                    </p>
-                    <span className="text-gray-400 text-xs mt-1 block">
-                      Yesterday
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex mb-4 pb-4 border-b border-gray-200">
-                  <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-900 mr-4">
-                    ⬇️
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-400 mb-1">
-                      Download Milestone
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      Your publication "Assessment Techniques" reached 100
-                      downloads
-                    </p>
-                    <span className="text-gray-400 text-xs mt-1 block">
-                      2 days ago
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex">
-                  <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-900 mr-4">
-                    🔔
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-500 mb-1">
-                      Upcoming Conference
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      Reminder: EdTech Global Summit 2025 registration closes
-                      soon
-                    </p>
-                    <span className="text-gray-400 text-xs mt-1 block">
-                      3 days ago
-                    </span>
+                <div className="bg-white rounded-lg shadow-sm p-5">
+                  <div className="space-y-4">
+                    {[...Array(4)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="flex items-start space-x-4 animate-pulse"
+                      >
+                        <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
+                        <div className="flex-1">
+                          <div className="h-4 bg-gray-200 rounded mb-2 w-3/4"></div>
+                          <div className="h-3 bg-gray-200 rounded mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded w-16"></div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            }
+          >
+            <RecentActivities />
+          </Suspense>
         </main>
       </div>
     </div>

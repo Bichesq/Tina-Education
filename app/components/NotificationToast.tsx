@@ -18,9 +18,9 @@ export default function NotificationToast() {
   const addNotification = (notification: Omit<ToastNotification, "id">) => {
     const id = `toast_${Date.now()}_${Math.random().toString(36).substring(7)}`;
     const newNotification = { ...notification, id };
-    
-    setNotifications(prev => [...prev, newNotification]);
-    
+
+    setNotifications((prev) => [...prev, newNotification]);
+
     // Auto-remove after 5 seconds
     setTimeout(() => {
       removeNotification(id);
@@ -42,22 +42,34 @@ export default function NotificationToast() {
           const data = await response.json();
           // This is a simple implementation - in production you'd want to track which notifications are new
           // and only show toasts for truly new ones
+        } else {
+          console.warn(
+            "Failed to fetch notifications:",
+            response.status,
+            response.statusText
+          );
         }
       } catch (error) {
+        // Silently handle network errors to avoid spamming console
+        // Only log if it's not a network connectivity issue
+        if (error instanceof TypeError && error.message.includes("fetch")) {
+          // Network error - don't log to avoid spam
+          return;
+        }
         console.error("Failed to check for notifications:", error);
       }
     };
 
     // Check every 30 seconds
     const interval = setInterval(checkForNewNotifications, 30000);
-    
+
     return () => clearInterval(interval);
   }, [session?.user?.id]);
 
   // Expose the addNotification function globally for other components to use
   useEffect(() => {
     (window as any).showNotificationToast = addNotification;
-    
+
     return () => {
       delete (window as any).showNotificationToast;
     };
@@ -65,7 +77,7 @@ export default function NotificationToast() {
 
   const getToastStyles = (type: ToastNotification["type"]) => {
     const baseStyles = "p-4 rounded-lg shadow-lg border-l-4 max-w-sm";
-    
+
     switch (type) {
       case "success":
         return `${baseStyles} bg-green-50 border-green-400 text-green-800`;
