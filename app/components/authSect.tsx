@@ -4,6 +4,7 @@ import { NotificationBell } from "./NotificationBell";
 
 export default function AuthSect() {
   const { data: session } = useSession();
+
   return (
     <div className="flex justify-center items-center gap-5 relative text-gray-500">
       {!session && (

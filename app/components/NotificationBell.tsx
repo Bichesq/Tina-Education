@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export function NotificationBell() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [unreadCount, setUnreadCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -38,7 +38,15 @@ export function NotificationBell() {
     return () => clearInterval(interval);
   }, [session?.user?.id]);
 
-  if (!session?.user?.id) return null;
+  // Wait for session to load
+  if (status === "loading") {
+    return <div className="w-6 h-6 animate-pulse bg-gray-200 rounded"></div>;
+  }
+
+  // No session means user is not logged in
+  if (status === "unauthenticated" || !session?.user?.id) {
+    return null;
+  }
 
   return (
     <Link href="/dashboard/notifications" className="relative">
@@ -46,9 +54,10 @@ export function NotificationBell() {
         size={24}
         className="text-gray-600 hover:text-blue-600 transition-colors"
       />
-      {!isLoading && unreadCount > 0 && (
+      {/* Show notification count badge when there are unread notifications */}
+      {unreadCount > 0 && (
         <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
-          {unreadCount > 99 ? '99+' : unreadCount}
+          {unreadCount > 99 ? "99+" : unreadCount}
         </span>
       )}
     </Link>
