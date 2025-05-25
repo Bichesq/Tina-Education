@@ -63,3 +63,9 @@ All these were due to the fact that I incorporated the prisma adapter into the n
 and the errors were resolved. I will now try to figure out how to get the prisma adapter to work with next-auth, so that I can use the database to store the user data, but at the same time be able to use the next-auth session.
 
 It turned out that the issue was with missmatch between the database schema and the data sent to create the user. I had to update the database schema to match the data being sent to create the user. I also had to update the next-auth options to use the prisma adapter, and now everything works well - at sign in, the user is created in the database and the session is created with the user data. I can now use the prisma client to query the database and get the user data.
+
+3. I had issues when attempting to submit manuscript data to the database. I was getting the error:
+The error TypeError: Cannot read properties of undefined (reading 'create') at prisma.manuscript.create 
+
+SOLUTUION:
+Apparently, there was an issue with the prisma client. It turned out the custom output '.generated/prisma' was the issue. I commented out the line of code in the prisma.schema file: and ran the 'npm prisma generate' command. This generated the default output in the node_modules/@prisma/client directory. I then updated the import statement in the prisma.ts file to import the prisma client from the default output directory. it worked well after that. I was able to submit the manuscript data to the database without any issues.

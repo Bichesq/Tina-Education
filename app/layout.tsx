@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import AuthProvider from "./context/AuthProvider";
 import HomeNav from "./components/home_nav";
 import Footer from "./components/footer";
+import NotificationToast from "./components/NotificationToast";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,7 +26,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <body
@@ -33,10 +33,11 @@ export default function RootLayout({
       >
         <AuthProvider>
           <HomeNav />
-          
-            {children}
-          
+
+          {children}
+
           <Footer />
+          <NotificationToast />
         </AuthProvider>
       </body>
     </html>
