@@ -93,6 +93,20 @@ export async function POST(request: Request) {
               `📝 Processing reviewer ${index + 1}/${reviewers.length}: ${reviewer.email}`
             );
 
+            // Create review assignment
+            const review = await prisma.review.create({
+              data: {
+                manuscript_id: manuscript.id,
+                reviewer_id: reviewer.id,
+                content: `Review assignment for manuscript: ${manuscript.title}`,
+                status: "PENDING",
+              },
+            });
+            console.log(
+              `✅ Review assignment created for ${reviewer.email}:`,
+              review.id
+            );
+
             // Create dashboard notification
             const notification = await prisma.notification.create({
               data: {
@@ -104,7 +118,10 @@ export async function POST(request: Request) {
                 relatedId: manuscript.id,
               },
             });
-            console.log(`✅ Dashboard notification created for ${reviewer.email}:`, notification.id);
+            console.log(
+              `✅ Dashboard notification created for ${reviewer.email}:`,
+              notification.id
+            );
 
             // Send email notification
             const emailResult = await resend.emails.send({
@@ -132,7 +149,7 @@ export async function POST(request: Request) {
                   <p>Please log in to the ARRS system to access the full manuscript and begin your review.</p>
 
                   <div style="text-align: center; margin: 30px 0;">
-                    <a href="${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/dashboard"
+                    <a href="${process.env.NEXTAUTH_URL || "http://localhost:3000"}/dashboard"
                        style="background-color: #1e40af; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
                       Review Manuscript
                     </a>

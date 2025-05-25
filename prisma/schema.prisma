@@ -143,8 +143,9 @@ enum ManuscriptStatus {
 enum ReviewStatus {
   PENDING
   ACCEPTED
-  REJECTED
-  SUBMITTED
+  DECLINED
+  IN_REVIEW
+  REVIEW_SUBMITTED
 }
 
 enum Role {
