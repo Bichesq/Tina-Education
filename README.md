@@ -69,3 +69,4 @@ The error TypeError: Cannot read properties of undefined (reading 'create') at p
 
 SOLUTUION:
 Apparently, there was an issue with the prisma client. It turned out the custom output '.generated/prisma' was the issue. I commented out the line of code in the prisma.schema file: and ran the 'npm prisma generate' command. This generated the default output in the node_modules/@prisma/client directory. I then updated the import statement in the prisma.ts file to import the prisma client from the default output directory. it worked well after that. I was able to submit the manuscript data to the database without any issues.
+
