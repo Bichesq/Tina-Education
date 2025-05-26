@@ -52,17 +52,26 @@ async function MessagesList() {
   });
 
   // Group messages by review
-  const messagesByReview = reviewMessages.reduce((acc, message) => {
-    const reviewId = message.reviewId;
-    if (!acc[reviewId]) {
-      acc[reviewId] = {
-        review: message.review,
-        messages: [],
-      };
-    }
-    acc[reviewId].messages.push(message);
-    return acc;
-  }, {} as Record<string, any>);
+  const messagesByReview = reviewMessages.reduce(
+    (acc, message) => {
+      const reviewId = message.reviewId;
+      if (!acc[reviewId]) {
+        acc[reviewId] = {
+          review: message.review,
+          messages: [],
+        };
+      }
+      acc[reviewId].messages.push(message);
+      return acc;
+    },
+    {} as Record<
+      string,
+      {
+        review: (typeof reviewMessages)[0]["review"];
+        messages: typeof reviewMessages;
+      }
+    >
+  );
 
   const reviewGroups = Object.values(messagesByReview);
 
@@ -134,7 +143,9 @@ async function MessagesList() {
               Review Discussion: {group.review.manuscript.title}
             </h3>
             <div className="flex items-center space-x-4 text-sm text-gray-600">
-              <span>Reviewer: {group.review.user.name || group.review.user.email}</span>
+              <span>
+                Reviewer: {group.review.user.name || group.review.user.email}
+              </span>
               <span>•</span>
               <span>{group.messages.length} messages</span>
               <span>•</span>
@@ -148,37 +159,41 @@ async function MessagesList() {
           </div>
 
           <div className="space-y-3">
-            {group.messages.slice(0, 3).map((message: any) => (
-              <div
-                key={message.id}
-                className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg"
-              >
-                <div className="flex-shrink-0">
-                  <span className="text-lg">{getSenderIcon(message.sender)}</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${getSenderColor(
-                        message.sender
-                      )}`}
-                    >
-                      {message.sender}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      {message.user.name || message.user.email}
-                    </span>
-                    <span className="text-sm text-gray-400">
-                      {formatDate(message.createdAt)}
+            {group.messages
+              .slice(0, 3)
+              .map((message: (typeof reviewMessages)[0]) => (
+                <div
+                  key={message.id}
+                  className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg"
+                >
+                  <div className="flex-shrink-0">
+                    <span className="text-lg">
+                      {getSenderIcon(message.sender)}
                     </span>
                   </div>
-                  <p className="text-gray-700 text-sm line-clamp-2">
-                    {message.content}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <span
+                        className={`px-2 py-1 rounded text-xs font-medium ${getSenderColor(
+                          message.sender
+                        )}`}
+                      >
+                        {message.sender}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {message.user.name || message.user.email}
+                      </span>
+                      <span className="text-sm text-gray-400">
+                        {formatDate(message.createdAt)}
+                      </span>
+                    </div>
+                    <p className="text-gray-700 text-sm line-clamp-2">
+                      {message.content}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
-            
+              ))}
+
             {group.messages.length > 3 && (
               <div className="text-center pt-2">
                 <Link
@@ -246,7 +261,7 @@ export default function MessagesPage() {
           </div>
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-sm text-blue-800">
-              <strong>Note:</strong> Currently showing review-related messages. 
+              <strong>Note:</strong> Currently showing review-related messages.
               General messaging features coming soon.
             </p>
           </div>

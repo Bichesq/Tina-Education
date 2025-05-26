@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { prisma } from "../../../prisma";
 import { Suspense } from "react";
+import Image from "next/image";
 
 async function SettingsContent() {
   const session = await auth();
@@ -73,9 +74,11 @@ async function SettingsContent() {
         <div className="flex items-center space-x-4">
           <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
             {user.image ? (
-              <img
+              <Image
                 src={user.image}
                 alt={user.name || "User"}
+                width={64}
+                height={64}
                 className="w-16 h-16 rounded-full object-cover"
               />
             ) : (
@@ -92,8 +95,8 @@ async function SettingsContent() {
                 user.role === "ADMIN"
                   ? "bg-red-100 text-red-800"
                   : user.role === "REVIEWER"
-                  ? "bg-blue-100 text-blue-800"
-                  : "bg-gray-100 text-gray-800"
+                    ? "bg-blue-100 text-blue-800"
+                    : "bg-gray-100 text-gray-800"
               }`}
             >
               {user.role}
@@ -131,12 +134,16 @@ async function SettingsContent() {
 
       {/* Quick Settings */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Settings</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Quick Settings
+        </h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium text-gray-900">Email Notifications</p>
-              <p className="text-sm text-gray-500">Receive email updates about your manuscripts</p>
+              <p className="text-sm text-gray-500">
+                Receive email updates about your manuscripts
+              </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" className="sr-only peer" defaultChecked />
@@ -147,7 +154,9 @@ async function SettingsContent() {
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium text-gray-900">Review Reminders</p>
-              <p className="text-sm text-gray-500">Get reminded about pending reviews</p>
+              <p className="text-sm text-gray-500">
+                Get reminded about pending reviews
+              </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" className="sr-only peer" defaultChecked />
@@ -158,7 +167,9 @@ async function SettingsContent() {
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium text-gray-900">Auto-save Drafts</p>
-              <p className="text-sm text-gray-500">Automatically save your work while writing</p>
+              <p className="text-sm text-gray-500">
+                Automatically save your work while writing
+              </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" className="sr-only peer" defaultChecked />
@@ -169,7 +180,9 @@ async function SettingsContent() {
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium text-gray-900">Dark Mode</p>
-              <p className="text-sm text-gray-500">Use dark theme for the interface</p>
+              <p className="text-sm text-gray-500">
+                Use dark theme for the interface
+              </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" className="sr-only peer" />
@@ -181,14 +194,18 @@ async function SettingsContent() {
 
       {/* Account Actions */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Actions</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Account Actions
+        </h3>
         <div className="space-y-4">
           <button className="w-full text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
             <div className="flex items-center space-x-3">
               <span className="text-xl">📥</span>
               <div>
                 <p className="font-medium text-gray-900">Export Data</p>
-                <p className="text-sm text-gray-500">Download all your manuscripts and data</p>
+                <p className="text-sm text-gray-500">
+                  Download all your manuscripts and data
+                </p>
               </div>
             </div>
           </button>
@@ -198,7 +215,9 @@ async function SettingsContent() {
               <span className="text-xl">🔄</span>
               <div>
                 <p className="font-medium text-gray-900">Reset Preferences</p>
-                <p className="text-sm text-gray-500">Reset all settings to default values</p>
+                <p className="text-sm text-gray-500">
+                  Reset all settings to default values
+                </p>
               </div>
             </div>
           </button>
@@ -208,7 +227,9 @@ async function SettingsContent() {
               <span className="text-xl">🗑️</span>
               <div>
                 <p className="font-medium text-red-900">Delete Account</p>
-                <p className="text-sm text-red-600">Permanently delete your account and all data</p>
+                <p className="text-sm text-red-600">
+                  Permanently delete your account and all data
+                </p>
               </div>
             </div>
           </button>

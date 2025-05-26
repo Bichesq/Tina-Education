@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { prisma } from "../../../prisma";
 import { Suspense } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 async function CollaboratorsList() {
   const session = await auth();
@@ -12,7 +13,9 @@ async function CollaboratorsList() {
         <h3 className="text-lg font-medium text-gray-900 mb-2">
           Access Denied
         </h3>
-        <p className="text-gray-500">Please log in to view your collaborators.</p>
+        <p className="text-gray-500">
+          Please log in to view your collaborators.
+        </p>
       </div>
     );
   }
@@ -113,7 +116,8 @@ async function CollaboratorsList() {
           No Collaborators Yet
         </h3>
         <p className="text-gray-500 mb-6">
-          Start collaborating by submitting manuscripts for review or reviewing others' work.
+          Start collaborating by submitting manuscripts for review or reviewing
+          others&apos; work.
         </p>
         <div className="flex justify-center space-x-4">
           <Link
@@ -170,9 +174,11 @@ async function CollaboratorsList() {
             <div className="flex items-start space-x-4">
               <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
                 {collaborator.image ? (
-                  <img
+                  <Image
                     src={collaborator.image}
                     alt={collaborator.name || "User"}
+                    width={48}
+                    height={48}
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
@@ -195,33 +201,37 @@ async function CollaboratorsList() {
                   </span>
                 </div>
                 <p className="text-gray-600 mb-3">{collaborator.email}</p>
-                
-                {collaborator.manuscripts && collaborator.manuscripts.length > 0 && (
-                  <div>
-                    <p className="text-sm font-medium text-gray-700 mb-2">
-                      Collaborated on:
-                    </p>
-                    <div className="space-y-1">
-                      {collaborator.manuscripts.slice(0, 3).map((manuscript: any) => (
-                        <Link
-                          key={manuscript.id}
-                          href={`/manuscripts/${manuscript.id}`}
-                          className="block text-sm text-blue-900 hover:text-blue-700 hover:underline"
-                        >
-                          • {manuscript.title}
-                        </Link>
-                      ))}
-                      {collaborator.manuscripts.length > 3 && (
-                        <p className="text-sm text-gray-500">
-                          +{collaborator.manuscripts.length - 3} more manuscripts
-                        </p>
-                      )}
+
+                {collaborator.manuscripts &&
+                  collaborator.manuscripts.length > 0 && (
+                    <div>
+                      <p className="text-sm font-medium text-gray-700 mb-2">
+                        Collaborated on:
+                      </p>
+                      <div className="space-y-1">
+                        {collaborator.manuscripts
+                          .slice(0, 3)
+                          .map((manuscript: { id: string; title: string }) => (
+                            <Link
+                              key={manuscript.id}
+                              href={`/manuscripts/${manuscript.id}`}
+                              className="block text-sm text-blue-900 hover:text-blue-700 hover:underline"
+                            >
+                              • {manuscript.title}
+                            </Link>
+                          ))}
+                        {collaborator.manuscripts.length > 3 && (
+                          <p className="text-sm text-gray-500">
+                            +{collaborator.manuscripts.length - 3} more
+                            manuscripts
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               <button className="text-blue-900 hover:text-blue-700 font-medium text-sm">
                 Message
@@ -278,15 +288,18 @@ export default function CollaboratorsPage() {
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Co-authors</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Co-authors
+            </h1>
             <p className="text-gray-600">
-              Connect with reviewers and authors you've collaborated with
+              Connect with reviewers and authors you&apos;ve collaborated with
             </p>
           </div>
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-sm text-blue-800">
-              <strong>Note:</strong> Collaborators are automatically identified based on review activities.
-              Direct collaboration features coming soon.
+              <strong>Note:</strong> Collaborators are automatically identified
+              based on review activities. Direct collaboration features coming
+              soon.
             </p>
           </div>
         </div>

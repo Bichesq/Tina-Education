@@ -24,18 +24,20 @@ async function LibraryContent() {
       orderBy: { createdAt: "desc" },
     }),
     prisma.manuscript.findMany({
-      where: { 
+      where: {
         author_id: session.user.id,
-        status: { in: ["ACCEPTED", "PUBLISHED"] }
+        status: { in: ["ACCEPTED", "PUBLISHED"] },
       },
       orderBy: { updatedAt: "desc" },
     }),
   ]);
 
   const allItems = [
-    ...publications.map(p => ({ ...p, itemType: "publication" })),
-    ...manuscripts.map(m => ({ ...m, itemType: "manuscript" }))
-  ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    ...publications.map((p) => ({ ...p, itemType: "publication" })),
+    ...manuscripts.map((m) => ({ ...m, itemType: "manuscript" })),
+  ].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
 
   if (allItems.length === 0) {
     return (
@@ -68,17 +70,41 @@ async function LibraryContent() {
   function getTypeInfo(type: string) {
     switch (type) {
       case "JOURNAL":
-        return { icon: "📄", label: "Journal Article", color: "bg-blue-50 text-blue-700" };
+        return {
+          icon: "📄",
+          label: "Journal Article",
+          color: "bg-blue-50 text-blue-700",
+        };
       case "ARTICLE":
-        return { icon: "📝", label: "Article", color: "bg-green-50 text-green-700" };
+        return {
+          icon: "📝",
+          label: "Article",
+          color: "bg-green-50 text-green-700",
+        };
       case "BOOK":
-        return { icon: "📚", label: "Book", color: "bg-purple-50 text-purple-700" };
+        return {
+          icon: "📚",
+          label: "Book",
+          color: "bg-purple-50 text-purple-700",
+        };
       case "EBOOK":
-        return { icon: "💻", label: "E-book", color: "bg-orange-50 text-orange-700" };
+        return {
+          icon: "💻",
+          label: "E-book",
+          color: "bg-orange-50 text-orange-700",
+        };
       case "AUDIOBOOK":
-        return { icon: "🎧", label: "Audiobook", color: "bg-indigo-50 text-indigo-700" };
+        return {
+          icon: "🎧",
+          label: "Audiobook",
+          color: "bg-indigo-50 text-indigo-700",
+        };
       default:
-        return { icon: "📄", label: "Document", color: "bg-gray-50 text-gray-700" };
+        return {
+          icon: "📄",
+          label: "Document",
+          color: "bg-gray-50 text-gray-700",
+        };
     }
   }
 
@@ -90,15 +116,15 @@ async function LibraryContent() {
     }).format(date);
   }
 
-  // Group items by type
-  const groupedItems = allItems.reduce((acc, item) => {
-    const type = item.itemType;
-    if (!acc[type]) {
-      acc[type] = [];
-    }
-    acc[type].push(item);
-    return acc;
-  }, {} as Record<string, any[]>);
+  // Group items by type (for future filtering functionality)
+  // const groupedItems = allItems.reduce((acc, item) => {
+  //   const type = item.itemType;
+  //   if (!acc[type]) {
+  //     acc[type] = [];
+  //   }
+  //   acc[type].push(item);
+  //   return acc;
+  // }, {} as Record<string, Array<typeof allItems[0]>>);
 
   return (
     <div className="space-y-8">
@@ -108,31 +134,39 @@ async function LibraryContent() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Publications</p>
-              <p className="text-2xl font-bold text-gray-900">{publications.length}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {publications.length}
+              </p>
             </div>
             <div className="p-3 rounded-lg bg-blue-100 text-blue-800">
               <span className="text-2xl">📚</span>
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Accepted Manuscripts</p>
-              <p className="text-2xl font-bold text-gray-900">{manuscripts.length}</p>
+              <p className="text-sm font-medium text-gray-600">
+                Accepted Manuscripts
+              </p>
+              <p className="text-2xl font-bold text-gray-900">
+                {manuscripts.length}
+              </p>
             </div>
             <div className="p-3 rounded-lg bg-green-100 text-green-800">
               <span className="text-2xl">✅</span>
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Items</p>
-              <p className="text-2xl font-bold text-gray-900">{allItems.length}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {allItems.length}
+              </p>
             </div>
             <div className="p-3 rounded-lg bg-purple-100 text-purple-800">
               <span className="text-2xl">📖</span>
@@ -161,36 +195,42 @@ async function LibraryContent() {
         {allItems.map((item) => {
           const typeInfo = getTypeInfo(item.type);
           const isPublication = item.itemType === "publication";
-          
+
           return (
             <div
               key={`${item.itemType}-${item.id}`}
               className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start justify-between mb-4">
-                <span className={`px-2 py-1 rounded text-xs font-medium ${typeInfo.color}`}>
+                <span
+                  className={`px-2 py-1 rounded text-xs font-medium ${typeInfo.color}`}
+                >
                   {typeInfo.icon} {typeInfo.label}
                 </span>
                 <span className="text-xs text-gray-500">
                   {isPublication ? "Published" : "Accepted"}
                 </span>
               </div>
-              
+
               <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
                 {item.title}
               </h3>
-              
+
               {item.abstract && (
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                   {item.abstract}
                 </p>
               )}
-              
+
               <div className="flex items-center justify-between text-sm text-gray-500">
                 <span>{formatDate(item.createdAt)}</span>
                 <div className="flex space-x-2">
                   <Link
-                    href={isPublication ? `/publications/${item.id}` : `/manuscripts/${item.id}`}
+                    href={
+                      isPublication
+                        ? `/publications/${item.id}`
+                        : `/manuscripts/${item.id}`
+                    }
                     className="text-blue-900 hover:text-blue-700 font-medium"
                   >
                     View
@@ -209,7 +249,9 @@ async function LibraryContent() {
 
       {/* Quick Actions */}
       <div className="bg-gray-50 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Quick Actions
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
             href="/publications/new"
@@ -218,10 +260,12 @@ async function LibraryContent() {
             <span className="text-2xl mr-3">➕</span>
             <div>
               <p className="font-medium text-gray-900">Add Publication</p>
-              <p className="text-sm text-gray-500">Upload a new published work</p>
+              <p className="text-sm text-gray-500">
+                Upload a new published work
+              </p>
             </div>
           </Link>
-          
+
           <Link
             href="/dashboard/manuscripts"
             className="flex items-center p-4 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow"
@@ -232,7 +276,7 @@ async function LibraryContent() {
               <p className="text-sm text-gray-500">Check manuscript status</p>
             </div>
           </Link>
-          
+
           <button className="flex items-center p-4 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow">
             <span className="text-2xl mr-3">📊</span>
             <div>
@@ -262,7 +306,7 @@ function LibraryLoading() {
           </div>
         ))}
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(6)].map((_, i) => (
           <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 animate-pulse">
