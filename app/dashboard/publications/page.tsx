@@ -83,9 +83,12 @@ async function PublicationsList() {
     return (
       <div className="text-center py-12">
         <div className="text-6xl mb-4">📚</div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No Publications Yet</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">
+          No Publications Yet
+        </h3>
         <p className="text-gray-500 mb-6">
-          You haven't published any work yet. Start by creating and submitting your first manuscript.
+          You haven&apos;t published any work yet. Start by creating and
+          submitting your first manuscript.
         </p>
         <Link
           href="/manuscripts/new"

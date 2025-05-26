@@ -271,7 +271,7 @@ export default function ReviewerWorkspace() {
                   Welcome back, Dr. Johnson
                 </h1>
                 <p className="text-gray-600">
-                  Here's an overview of your review activities
+                  Here&apos;s an overview of your review activities
                 </p>
               </div>
               <div className="date">

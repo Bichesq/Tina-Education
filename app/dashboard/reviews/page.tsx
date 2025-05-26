@@ -186,7 +186,8 @@ async function ReviewsList() {
           No Reviews Assigned
         </h3>
         <p className="text-gray-500 mb-6">
-          You don't have any manuscripts assigned for review yet. Check back later for new assignments.
+          You don&apos;t have any manuscripts assigned for review yet. Check
+          back later for new assignments.
         </p>
         <Link
           href="/dashboard"
