@@ -42,9 +42,9 @@ function getStatusInfo(manuscript: ManuscriptWithReviews) {
     (r) => r.status === "REVIEW_SUBMITTED"
   ).length;
 
-  if (manuscript.status === "PUBLISHED") {
+  if (manuscript.status === "ACCEPTED") {
     return {
-      label: "Published",
+      label: "Accepted",
       color: "bg-green-100 text-green-600",
       info: `${completedReviews} reviews completed`,
     };

@@ -9,32 +9,41 @@ import CommunicationPanel from "./CommunicationPanel";
 
 interface Review {
   id: string;
+  manuscript_id: string;
+  reviewer_id: string;
+  status: string;
   manuscript: {
+    id: string;
     title: string;
-    user: {
-      name: string;
-    };
+    abstract: string;
+    content: string;
+    keywords: string;
     type: string;
+    pdfFile: string;
+    user: {
+      name: string | null;
+      email: string;
+    };
   };
   messages: Array<{
     id: string;
     content: string;
-    sender: string;
-    createdAt: string;
+    sender: "REVIEWER" | "EDITOR" | "AUTHOR";
+    createdAt: Date;
     user: {
-      name: string;
+      name: string | null;
       email: string;
     };
   }>;
-  contentEvaluation?: string;
-  styleEvaluation?: string;
-  strengths?: string;
-  weaknesses?: string;
-  recommendation?: string;
-  confidentialComments?: string;
-  publicComments?: string;
-  overallRating?: number;
-  timeSpent?: number;
+  contentEvaluation?: string | null;
+  styleEvaluation?: string | null;
+  strengths?: string | null;
+  weaknesses?: string | null;
+  recommendation?: string | null;
+  confidentialComments?: string | null;
+  publicComments?: string | null;
+  overallRating?: number | null;
+  timeSpent?: number | null;
 }
 
 interface ReviewInterfaceProps {
@@ -167,7 +176,7 @@ export default function ReviewInterface({ review }: ReviewInterfaceProps) {
               Review: {review.manuscript.title}
             </h1>
             <p className="text-sm text-gray-600">
-              Author: {review.manuscript.user.name} • Type:{" "}
+              Author: {review.manuscript.user.name || "Unknown"} • Type:{" "}
               {review.manuscript.type}
             </p>
           </div>

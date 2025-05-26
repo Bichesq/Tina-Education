@@ -7,9 +7,9 @@ interface Message {
   id: string;
   content: string;
   sender: "REVIEWER" | "EDITOR" | "AUTHOR";
-  createdAt: string;
+  createdAt: Date;
   user: {
-    name: string;
+    name: string | null;
     email: string;
   };
 }
@@ -26,7 +26,10 @@ interface CommunicationPanelProps {
   messages: Message[];
 }
 
-export default function CommunicationPanel({ review, messages }: CommunicationPanelProps) {
+export default function CommunicationPanel({
+  review,
+  messages,
+}: CommunicationPanelProps) {
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -64,19 +67,38 @@ export default function CommunicationPanel({ review, messages }: CommunicationPa
   const getSenderInfo = (sender: string) => {
     switch (sender) {
       case "REVIEWER":
-        return { label: "Reviewer", color: "bg-blue-100 text-blue-800", icon: "👨‍🔬" };
+        return {
+          label: "Reviewer",
+          color: "bg-blue-100 text-blue-800",
+          icon: "👨‍🔬",
+        };
       case "EDITOR":
-        return { label: "Editor", color: "bg-purple-100 text-purple-800", icon: "✏️" };
+        return {
+          label: "Editor",
+          color: "bg-purple-100 text-purple-800",
+          icon: "✏️",
+        };
       case "AUTHOR":
-        return { label: "Author", color: "bg-green-100 text-green-800", icon: "👨‍💼" };
+        return {
+          label: "Author",
+          color: "bg-green-100 text-green-800",
+          icon: "👨‍💼",
+        };
       default:
-        return { label: "Unknown", color: "bg-gray-100 text-gray-800", icon: "❓" };
+        return {
+          label: "Unknown",
+          color: "bg-gray-100 text-gray-800",
+          icon: "❓",
+        };
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const formatDate = (date: Date) => {
+    return (
+      date.toLocaleDateString() +
+      " " +
+      date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    );
   };
 
   return (
@@ -127,7 +149,7 @@ export default function CommunicationPanel({ review, messages }: CommunicationPa
                         {senderInfo.label}
                       </span>
                       <span className="ml-2 text-xs text-gray-500">
-                        {message.user.name}
+                        {message.user.name || "Unknown"}
                       </span>
                       <span className="ml-2 text-xs text-gray-400">
                         {formatDate(message.createdAt)}

@@ -3,15 +3,15 @@
 interface Review {
   id: string;
   status: string;
-  revisionRound: number;
-  overallRating?: number;
-  createdAt: string;
-  updatedAt: string;
+  revisionRound?: number | null;
+  overallRating?: number | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
   manuscript: {
     title: string;
     type: string;
     user: {
-      name: string;
+      name: string | null;
     };
   };
 }
@@ -22,7 +22,11 @@ interface ReviewProgressProps {
   timeSpent: number;
 }
 
-export default function ReviewProgress({ review, progress, timeSpent }: ReviewProgressProps) {
+export default function ReviewProgress({
+  review,
+  progress,
+  timeSpent,
+}: ReviewProgressProps) {
   const formatTime = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
@@ -30,27 +34,47 @@ export default function ReviewProgress({ review, progress, timeSpent }: ReviewPr
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const getStatusInfo = (status: string) => {
     switch (status) {
       case "PENDING":
-        return { label: "Pending Assignment", color: "bg-yellow-100 text-yellow-800", icon: "⏳" };
+        return {
+          label: "Pending Assignment",
+          color: "bg-yellow-100 text-yellow-800",
+          icon: "⏳",
+        };
       case "ACCEPTED":
-        return { label: "Assignment Accepted", color: "bg-green-100 text-green-800", icon: "✅" };
+        return {
+          label: "Assignment Accepted",
+          color: "bg-green-100 text-green-800",
+          icon: "✅",
+        };
       case "IN_REVIEW":
-        return { label: "In Review", color: "bg-blue-100 text-blue-800", icon: "📖" };
+        return {
+          label: "In Review",
+          color: "bg-blue-100 text-blue-800",
+          icon: "📖",
+        };
       case "REVIEW_SUBMITTED":
-        return { label: "Review Submitted", color: "bg-purple-100 text-purple-800", icon: "📤" };
+        return {
+          label: "Review Submitted",
+          color: "bg-purple-100 text-purple-800",
+          icon: "📤",
+        };
       default:
-        return { label: "Unknown", color: "bg-gray-100 text-gray-800", icon: "❓" };
+        return {
+          label: "Unknown",
+          color: "bg-gray-100 text-gray-800",
+          icon: "❓",
+        };
     }
   };
 
@@ -58,9 +82,21 @@ export default function ReviewProgress({ review, progress, timeSpent }: ReviewPr
 
   const progressSteps = [
     { id: 1, name: "Assignment Received", completed: true },
-    { id: 2, name: "Assignment Accepted", completed: review.status !== "PENDING" },
-    { id: 3, name: "Review in Progress", completed: ["IN_REVIEW", "REVIEW_SUBMITTED"].includes(review.status) },
-    { id: 4, name: "Review Submitted", completed: review.status === "REVIEW_SUBMITTED" },
+    {
+      id: 2,
+      name: "Assignment Accepted",
+      completed: review.status !== "PENDING",
+    },
+    {
+      id: 3,
+      name: "Review in Progress",
+      completed: ["IN_REVIEW", "REVIEW_SUBMITTED"].includes(review.status),
+    },
+    {
+      id: 4,
+      name: "Review Submitted",
+      completed: review.status === "REVIEW_SUBMITTED",
+    },
   ];
 
   return (
@@ -160,7 +196,7 @@ export default function ReviewProgress({ review, progress, timeSpent }: ReviewPr
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600 mb-1">
-                {review.revisionRound}
+                {review.revisionRound || "1"}
               </div>
               <div className="text-sm text-gray-600">Revision Round</div>
             </div>
@@ -186,7 +222,7 @@ export default function ReviewProgress({ review, progress, timeSpent }: ReviewPr
             <div>
               <strong className="text-gray-900">Author:</strong>
               <p className="text-gray-600 mt-1">
-                {review.manuscript.user.name}
+                {review.manuscript.user.name || "Unknown"}
               </p>
             </div>
             <div>
@@ -196,13 +232,13 @@ export default function ReviewProgress({ review, progress, timeSpent }: ReviewPr
             <div>
               <strong className="text-gray-900">Assigned:</strong>
               <p className="text-gray-600 mt-1">
-                {formatDate(review.createdAt)}
+                {review.createdAt ? formatDate(review.createdAt) : "Unknown"}
               </p>
             </div>
             <div>
               <strong className="text-gray-900">Last Updated:</strong>
               <p className="text-gray-600 mt-1">
-                {formatDate(review.updatedAt)}
+                {review.updatedAt ? formatDate(review.updatedAt) : "Unknown"}
               </p>
             </div>
             <div>

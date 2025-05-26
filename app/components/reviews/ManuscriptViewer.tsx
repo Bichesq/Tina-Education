@@ -12,19 +12,21 @@ interface ManuscriptViewerProps {
     type: string;
     pdfFile: string;
     user: {
-      name: string;
+      name: string | null;
       email: string;
     };
   };
 }
 
-export default function ManuscriptViewer({ manuscript }: ManuscriptViewerProps) {
+export default function ManuscriptViewer({
+  manuscript,
+}: ManuscriptViewerProps) {
   const [viewMode, setViewMode] = useState<"content" | "pdf">("content");
   const [fontSize, setFontSize] = useState(16);
 
   const handleDownloadPDF = () => {
     if (manuscript.pdfFile) {
-      window.open(manuscript.pdfFile, '_blank');
+      window.open(manuscript.pdfFile, "_blank");
     }
   };
 
@@ -55,7 +57,7 @@ export default function ManuscriptViewer({ manuscript }: ManuscriptViewerProps) 
               📋 PDF View
             </button>
           </div>
-          
+
           {viewMode === "content" && (
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-600">Font Size:</span>
@@ -91,16 +93,19 @@ export default function ManuscriptViewer({ manuscript }: ManuscriptViewerProps) 
       {/* Content Area */}
       <div className="flex-1 overflow-auto">
         {viewMode === "content" ? (
-          <div className="max-w-4xl mx-auto p-8" style={{ fontSize: `${fontSize}px` }}>
+          <div
+            className="max-w-4xl mx-auto p-8"
+            style={{ fontSize: `${fontSize}px` }}
+          >
             {/* Manuscript Header */}
             <div className="mb-8 pb-6 border-b border-gray-200">
               <h1 className="text-3xl font-bold text-gray-900 mb-4 leading-tight">
                 {manuscript.title}
               </h1>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 mb-4">
                 <div>
-                  <strong>Author:</strong> {manuscript.user.name}
+                  <strong>Author:</strong> {manuscript.user.name || "Unknown"}
                 </div>
                 <div>
                   <strong>Type:</strong> {manuscript.type}
@@ -113,7 +118,9 @@ export default function ManuscriptViewer({ manuscript }: ManuscriptViewerProps) 
 
             {/* Abstract */}
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Abstract</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Abstract
+              </h2>
               <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
                 <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
                   {manuscript.abstract}
@@ -123,9 +130,11 @@ export default function ManuscriptViewer({ manuscript }: ManuscriptViewerProps) 
 
             {/* Main Content */}
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Content</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Content
+              </h2>
               <div className="prose prose-lg max-w-none">
-                <div 
+                <div
                   className="text-gray-800 leading-relaxed whitespace-pre-wrap"
                   dangerouslySetInnerHTML={{ __html: manuscript.content }}
                 />
@@ -144,7 +153,9 @@ export default function ManuscriptViewer({ manuscript }: ManuscriptViewerProps) 
               <div className="text-center text-gray-500">
                 <div className="text-6xl mb-4">📄</div>
                 <p className="text-lg">No PDF file available</p>
-                <p className="text-sm">Please use the text view to read the manuscript</p>
+                <p className="text-sm">
+                  Please use the text view to read the manuscript
+                </p>
               </div>
             )}
           </div>
