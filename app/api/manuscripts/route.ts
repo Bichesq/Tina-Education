@@ -125,7 +125,7 @@ export async function POST(request: Request) {
 
             // Send email notification
             const emailResult = await resend.emails.send({
-              from: "ARRS System <onboarding@resend.dev>",
+              from: "Tina Education <onboarding@resend.dev>",
               to: reviewer.email!,
               subject: `New Manuscript Review Request: "${manuscript.title}"`,
               html: `
@@ -146,7 +146,7 @@ export async function POST(request: Request) {
                     <p style="margin: 5px 0;"><strong>Keywords:</strong> ${manuscript.keywords}</p>
                   </div>
 
-                  <p>Please log in to the ARRS system to access the full manuscript and begin your review.</p>
+                  <p>Please log in to the Tina Education system to access the full manuscript and begin your review.</p>
 
                   <div style="text-align: center; margin: 30px 0;">
                     <a href="${process.env.NEXTAUTH_URL || "http://localhost:3000"}/dashboard"
@@ -160,7 +160,7 @@ export async function POST(request: Request) {
                   <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
                   <p style="color: #64748b; font-size: 14px;">
                     Best regards,<br>
-                    Academic Review Request System (ARRS)<br>
+                    Tina Education<br>
                     <small>This is an automated notification from the development environment.</small>
                   </p>
                 </div>

@@ -94,7 +94,7 @@ export async function PATCH(
     try {
       const isAccepted = action === "ACCEPT_ASSIGNMENT";
       const emailResult = await resend.emails.send({
-        from: "ARRS System <onboarding@resend.dev>",
+        from: "Tina Education <onboarding@resend.dev>",
         to: review.manuscript.user.email!,
         subject: `Reviewer ${isAccepted ? "Accepted" : "Declined"} Assignment: "${review.manuscript.title}"`,
         html: `
@@ -140,12 +140,12 @@ export async function PATCH(
               </a>
             </div>
 
-            <p>Thank you for using the Academic Review Request System.</p>
+            <p>Thank you for using Tina Education.</p>
 
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
             <p style="color: #64748b; font-size: 14px;">
               Best regards,<br>
-              Academic Review Request System (ARRS)<br>
+              Tina Education<br>
               <small>This is an automated notification.</small>
             </p>
           </div>
