@@ -1,11 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import ManuscriptViewer from "./ManuscriptViewer";
 import ReviewForm from "./ReviewForm";
 import ReviewProgress from "./ReviewProgress";
 import CommunicationPanel from "./CommunicationPanel";
+
+const TABS = [
+  { id: "manuscript", label: "📄 Manuscript", icon: "📄" },
+  { id: "review", label: "📝 Review Form", icon: "📝" },
+  { id: "communication", label: "💬 Communication", icon: "💬" },
+  { id: "progress", label: "📊 Progress", icon: "📊" },
+];
 
 interface Review {
   id: string;
@@ -63,21 +70,16 @@ export default function ReviewInterface({ review }: ReviewInterfaceProps) {
     overallRating: review.overallRating || 3,
   });
   const [timeSpent, setTimeSpent] = useState(review.timeSpent || 0);
-  const [startTime, setStartTime] = useState<Date | null>(null);
   const router = useRouter();
 
   // Track time spent on review
   useEffect(() => {
-    setStartTime(new Date());
-
     const interval = setInterval(() => {
-      if (startTime) {
-        setTimeSpent((prev: number) => prev + 1);
-      }
+      setTimeSpent((prev: number) => prev + 1);
     }, 60000); // Update every minute
 
     return () => clearInterval(interval);
-  }, [startTime]);
+  }, []); // Empty dependency array to run only once
 
   const handleSaveDraft = async () => {
     try {
@@ -143,7 +145,7 @@ export default function ReviewInterface({ review }: ReviewInterfaceProps) {
     }
   };
 
-  const calculateProgress = () => {
+  const calculateProgress = useCallback(() => {
     const fields = [
       reviewData.contentEvaluation,
       reviewData.styleEvaluation,
@@ -157,14 +159,7 @@ export default function ReviewInterface({ review }: ReviewInterfaceProps) {
       (field) => field && field.trim().length > 0
     ).length;
     return Math.round((completedFields / fields.length) * 100);
-  };
-
-  const tabs = [
-    { id: "manuscript", label: "📄 Manuscript", icon: "📄" },
-    { id: "review", label: "📝 Review Form", icon: "📝" },
-    { id: "communication", label: "💬 Communication", icon: "💬" },
-    { id: "progress", label: "📊 Progress", icon: "📊" },
-  ];
+  }, [reviewData]);
 
   return (
     <div className="flex flex-col h-screen">
@@ -203,7 +198,7 @@ export default function ReviewInterface({ review }: ReviewInterfaceProps) {
       {/* Tab Navigation */}
       <nav className="bg-white border-b border-gray-200 px-6">
         <div className="flex space-x-8">
-          {tabs.map((tab) => (
+          {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
