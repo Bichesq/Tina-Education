@@ -26,7 +26,7 @@ async function LibraryContent() {
     prisma.manuscript.findMany({
       where: {
         author_id: session.user.id,
-        status: { in: ["ACCEPTED", "PUBLISHED"] },
+        status: "ACCEPTED",
       },
       orderBy: { updatedAt: "desc" },
     }),
@@ -235,7 +235,7 @@ async function LibraryContent() {
                   >
                     View
                   </Link>
-                  {item.cover && (
+                  {isPublication && "cover" in item && item.cover && (
                     <button className="text-blue-900 hover:text-blue-700 font-medium">
                       Download
                     </button>
