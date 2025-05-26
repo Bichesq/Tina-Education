@@ -1,8 +1,17 @@
 import { auth } from "@/auth";
 import { prisma } from "../../../prisma";
 import Link from "next/link";
+import { Manuscript, ReviewStatus } from "@prisma/client";
 
-async function getRecentManuscripts(userId: string) {
+type ManuscriptWithReviews = Manuscript & {
+  reviews: {
+    status: ReviewStatus;
+  }[];
+};
+
+async function getRecentManuscripts(
+  userId: string
+): Promise<ManuscriptWithReviews[]> {
   try {
     const manuscripts = await prisma.manuscript.findMany({
       where: { author_id: userId },
@@ -10,12 +19,12 @@ async function getRecentManuscripts(userId: string) {
       take: 3,
       include: {
         user: {
-          select: { name: true }
+          select: { name: true },
         },
         reviews: {
-          select: { status: true }
-        }
-      }
+          select: { status: true },
+        },
+      },
     });
 
     return manuscripts;
@@ -25,28 +34,31 @@ async function getRecentManuscripts(userId: string) {
   }
 }
 
-function getStatusInfo(manuscript: any) {
-  const reviewCount = manuscript.reviews.length;
-  const pendingReviews = manuscript.reviews.filter((r: any) => r.status === "PENDING").length;
-  const completedReviews = manuscript.reviews.filter((r: any) => r.status === "COMPLETED").length;
+function getStatusInfo(manuscript: ManuscriptWithReviews) {
+  const pendingReviews = manuscript.reviews.filter(
+    (r) => r.status === "PENDING"
+  ).length;
+  const completedReviews = manuscript.reviews.filter(
+    (r) => r.status === "REVIEW_SUBMITTED"
+  ).length;
 
   if (manuscript.status === "PUBLISHED") {
     return {
       label: "Published",
       color: "bg-green-100 text-green-600",
-      info: `${completedReviews} reviews completed`
+      info: `${completedReviews} reviews completed`,
     };
   } else if (manuscript.status === "UNDER_REVIEW") {
     return {
       label: "Under Review",
       color: "bg-blue-100 text-blue-600",
-      info: `${pendingReviews} reviews pending`
+      info: `${pendingReviews} reviews pending`,
     };
   } else {
     return {
       label: "Draft",
       color: "bg-amber-100 text-amber-600",
-      info: "Not submitted for review"
+      info: "Not submitted for review",
     };
   }
 }

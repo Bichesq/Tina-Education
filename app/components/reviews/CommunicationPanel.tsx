@@ -14,8 +14,15 @@ interface Message {
   };
 }
 
+interface Review {
+  id: string;
+  manuscript_id: string;
+  reviewer_id: string;
+  status: string;
+}
+
 interface CommunicationPanelProps {
-  review: any;
+  review: Review;
   messages: Message[];
 }
 
@@ -76,9 +83,12 @@ export default function CommunicationPanel({ review, messages }: CommunicationPa
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
       <div className="p-6 border-b border-gray-200 bg-gray-50">
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">Communication</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          Communication
+        </h2>
         <p className="text-sm text-gray-600">
-          Communicate with the editor about this review. Messages are confidential and not shared with the author.
+          Communicate with the editor about this review. Messages are
+          confidential and not shared with the author.
         </p>
       </div>
 
@@ -87,9 +97,12 @@ export default function CommunicationPanel({ review, messages }: CommunicationPa
         {messages.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">💬</div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No messages yet</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No messages yet
+            </h3>
             <p className="text-gray-600">
-              Start a conversation with the editor if you have questions or concerns about this review.
+              Start a conversation with the editor if you have questions or
+              concerns about this review.
             </p>
           </div>
         ) : (
@@ -97,15 +110,19 @@ export default function CommunicationPanel({ review, messages }: CommunicationPa
             {messages.map((message) => {
               const senderInfo = getSenderInfo(message.sender);
               const isCurrentUser = message.sender === "REVIEWER";
-              
+
               return (
                 <div
                   key={message.id}
                   className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}
                 >
-                  <div className={`max-w-2xl ${isCurrentUser ? "order-2" : "order-1"}`}>
+                  <div
+                    className={`max-w-2xl ${isCurrentUser ? "order-2" : "order-1"}`}
+                  >
                     <div className="flex items-center mb-2">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${senderInfo.color}`}>
+                      <span
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${senderInfo.color}`}
+                      >
                         <span className="mr-1">{senderInfo.icon}</span>
                         {senderInfo.label}
                       </span>
@@ -156,14 +173,16 @@ export default function CommunicationPanel({ review, messages }: CommunicationPa
             </button>
           </div>
         </div>
-        
+
         <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
           <div className="flex items-start">
             <div className="text-yellow-600 mr-2">⚠️</div>
             <div className="text-sm text-yellow-800">
-              <strong>Note:</strong> Messages in this panel are confidential communications between you and the editor. 
-              They are not shared with the manuscript author. Use this for questions about the review process, 
-              concerns about the manuscript, or requests for clarification.
+              <strong>Note:</strong> Messages in this panel are confidential
+              communications between you and the editor. They are not shared
+              with the manuscript author. Use this for questions about the
+              review process, concerns about the manuscript, or requests for
+              clarification.
             </div>
           </div>
         </div>

@@ -41,6 +41,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       console.log("🔐 Session callback - token:", token);
       if (token?.sub) {
         session.user.id = token.sub;
+
+        // Fetch user role from database
+        try {
+          const user = await prisma.user.findUnique({
+            where: { id: token.sub },
+            select: { role: true },
+          });
+          if (user) {
+            session.user.role = user.role;
+          }
+        } catch (error) {
+          console.error("Failed to fetch user role:", error);
+        }
       }
       return session;
     },

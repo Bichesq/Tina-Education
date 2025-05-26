@@ -8,11 +8,9 @@ import { useEffect, useState } from "react";
 export function NotificationBell() {
   const { data: session, status } = useSession();
   const [unreadCount, setUnreadCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!session?.user?.id) {
-      setIsLoading(false);
       return;
     }
 
@@ -34,7 +32,7 @@ export function NotificationBell() {
         }
         console.error("Failed to fetch notification count:", error);
       } finally {
-        setIsLoading(false);
+        // Loading state removed
       }
     };
 

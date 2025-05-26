@@ -93,19 +93,26 @@ export default function ReviewActions({ reviewId, status, manuscriptTitle }: Rev
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             <h3 className="text-lg font-bold text-gray-900 mb-4">
-              {action === "ACCEPT_ASSIGNMENT" ? "Accept" : "Decline"} Review Assignment
+              {action === "ACCEPT_ASSIGNMENT" ? "Accept" : "Decline"} Review
+              Assignment
             </h3>
 
             <p className="text-sm text-gray-600 mb-4">
-              You are about to <strong>{action === "ACCEPT_ASSIGNMENT" ? "accept" : "decline"}</strong> the review assignment for:
+              You are about to{" "}
+              <strong>
+                {action === "ACCEPT_ASSIGNMENT" ? "accept" : "decline"}
+              </strong>{" "}
+              the review assignment for:
               <br />
-              <em>"{manuscriptTitle}"</em>
+              <em>&quot;{manuscriptTitle}&quot;</em>
             </p>
 
             {action === "ACCEPT_ASSIGNMENT" && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
                 <p className="text-sm text-blue-800">
-                  <strong>By accepting:</strong> You will gain access to the manuscript and review platform where you can evaluate the work and submit your review report.
+                  <strong>By accepting:</strong> You will gain access to the
+                  manuscript and review platform where you can evaluate the work
+                  and submit your review report.
                 </p>
               </div>
             )}
@@ -113,8 +120,12 @@ export default function ReviewActions({ reviewId, status, manuscriptTitle }: Rev
             <div className="space-y-4">
               {/* Reason/Note Textarea */}
               <div>
-                <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-1">
-                  {action === "ACCEPT_ASSIGNMENT" ? "Note" : "Decline Reason"} <span className="text-gray-500">(optional)</span>
+                <label
+                  htmlFor="reason"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  {action === "ACCEPT_ASSIGNMENT" ? "Note" : "Decline Reason"}{" "}
+                  <span className="text-gray-500">(optional)</span>
                 </label>
                 <textarea
                   id="reason"
@@ -122,7 +133,11 @@ export default function ReviewActions({ reviewId, status, manuscriptTitle }: Rev
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder={action === "ACCEPT_ASSIGNMENT" ? "Add any notes or comments..." : "Please provide a reason for declining..."}
+                  placeholder={
+                    action === "ACCEPT_ASSIGNMENT"
+                      ? "Add any notes or comments..."
+                      : "Please provide a reason for declining..."
+                  }
                 />
               </div>
             </div>
@@ -144,7 +159,9 @@ export default function ReviewActions({ reviewId, status, manuscriptTitle }: Rev
                     : "bg-red-600 hover:bg-red-700"
                 }`}
               >
-                {isLoading ? "Submitting..." : `${action === "ACCEPT_ASSIGNMENT" ? "Accept" : "Decline"} Assignment`}
+                {isLoading
+                  ? "Submitting..."
+                  : `${action === "ACCEPT_ASSIGNMENT" ? "Accept" : "Decline"} Assignment`}
               </button>
             </div>
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 
 interface ToastNotification {
@@ -14,22 +14,25 @@ export default function NotificationToast() {
   const { data: session } = useSession();
   const [notifications, setNotifications] = useState<ToastNotification[]>([]);
 
+  const removeNotification = useCallback((id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  }, []);
+
   // Function to add a new toast notification
-  const addNotification = (notification: Omit<ToastNotification, "id">) => {
-    const id = `toast_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-    const newNotification = { ...notification, id };
+  const addNotification = useCallback(
+    (notification: Omit<ToastNotification, "id">) => {
+      const id = `toast_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+      const newNotification = { ...notification, id };
 
-    setNotifications((prev) => [...prev, newNotification]);
+      setNotifications((prev) => [...prev, newNotification]);
 
-    // Auto-remove after 5 seconds
-    setTimeout(() => {
-      removeNotification(id);
-    }, 5000);
-  };
-
-  const removeNotification = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
-  };
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        removeNotification(id);
+      }, 5000);
+    },
+    [removeNotification]
+  );
 
   // Poll for new notifications (in a real app, you'd use WebSockets or Server-Sent Events)
   useEffect(() => {
@@ -39,7 +42,7 @@ export default function NotificationToast() {
       try {
         const response = await fetch("/api/auth/notifications");
         if (response.ok) {
-          const data = await response.json();
+          await response.json();
           // This is a simple implementation - in production you'd want to track which notifications are new
           // and only show toasts for truly new ones
         } else {
@@ -68,12 +71,16 @@ export default function NotificationToast() {
 
   // Expose the addNotification function globally for other components to use
   useEffect(() => {
-    (window as any).showNotificationToast = addNotification;
+    (
+      window as Window & { showNotificationToast?: typeof addNotification }
+    ).showNotificationToast = addNotification;
 
     return () => {
-      delete (window as any).showNotificationToast;
+      delete (
+        window as Window & { showNotificationToast?: typeof addNotification }
+      ).showNotificationToast;
     };
-  }, []);
+  }, [addNotification]);
 
   const getToastStyles = (type: ToastNotification["type"]) => {
     const baseStyles = "p-4 rounded-lg shadow-lg border-l-4 max-w-sm";

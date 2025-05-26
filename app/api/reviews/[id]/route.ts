@@ -76,7 +76,7 @@ export async function PATCH(
     );
 
     // Create notification for manuscript author
-    const notification = await prisma.notification.create({
+    await prisma.notification.create({
       data: {
         userId: review.manuscript.user.id,
         title: `Reviewer ${action === "ACCEPT_ASSIGNMENT" ? "Accepted" : "Declined"} Assignment`,

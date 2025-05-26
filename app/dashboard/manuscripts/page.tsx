@@ -3,8 +3,24 @@ import { prisma } from "../../../prisma";
 import Link from "next/link";
 import { Suspense } from "react";
 import ManuscriptStats from "../../components/manuscripts/ManuscriptStats";
+import { Manuscript, ReviewStatus } from "@prisma/client";
 
-async function getManuscripts(userId: string) {
+// Define the type for manuscript with includes
+type ManuscriptWithIncludes = Manuscript & {
+  user: {
+    name: string | null;
+    email: string;
+  };
+  reviews: {
+    status: ReviewStatus;
+    reviewer_id: string;
+    createdAt: Date;
+  }[];
+};
+
+async function getManuscripts(
+  userId: string
+): Promise<ManuscriptWithIncludes[]> {
   try {
     const manuscripts = await prisma.manuscript.findMany({
       where: { author_id: userId },
@@ -30,15 +46,15 @@ async function getManuscripts(userId: string) {
   }
 }
 
-function getStatusInfo(manuscript: any) {
+function getStatusInfo(manuscript: ManuscriptWithIncludes) {
   const pendingReviews = manuscript.reviews.filter(
-    (r: any) => r.status === "PENDING"
+    (r) => r.status === "PENDING"
   ).length;
   const acceptedReviews = manuscript.reviews.filter(
-    (r: any) => r.status === "ACCEPTED"
+    (r) => r.status === "ACCEPTED"
   ).length;
   const rejectedReviews = manuscript.reviews.filter(
-    (r: any) => r.status === "REJECTED"
+    (r) => r.status === "DECLINED"
   ).length;
 
   if (manuscript.status === "ACCEPTED") {
@@ -135,7 +151,7 @@ function formatDate(date: Date) {
   }).format(date);
 }
 
-function getProgressPercentage(manuscript: any) {
+function getProgressPercentage(manuscript: ManuscriptWithIncludes) {
   let progress = 0;
 
   // Basic info (20%)

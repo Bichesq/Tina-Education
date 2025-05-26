@@ -7,8 +7,38 @@ import ReviewForm from "./ReviewForm";
 import ReviewProgress from "./ReviewProgress";
 import CommunicationPanel from "./CommunicationPanel";
 
+interface Review {
+  id: string;
+  manuscript: {
+    title: string;
+    user: {
+      name: string;
+    };
+    type: string;
+  };
+  messages: Array<{
+    id: string;
+    content: string;
+    sender: string;
+    createdAt: string;
+    user: {
+      name: string;
+      email: string;
+    };
+  }>;
+  contentEvaluation?: string;
+  styleEvaluation?: string;
+  strengths?: string;
+  weaknesses?: string;
+  recommendation?: string;
+  confidentialComments?: string;
+  publicComments?: string;
+  overallRating?: number;
+  timeSpent?: number;
+}
+
 interface ReviewInterfaceProps {
-  review: any; // We'll type this properly later
+  review: Review;
 }
 
 export default function ReviewInterface({ review }: ReviewInterfaceProps) {
@@ -30,12 +60,10 @@ export default function ReviewInterface({ review }: ReviewInterfaceProps) {
   // Track time spent on review
   useEffect(() => {
     setStartTime(new Date());
-    
+
     const interval = setInterval(() => {
       if (startTime) {
-        const now = new Date();
-        const sessionTime = Math.floor((now.getTime() - startTime.getTime()) / 60000); // minutes
-        setTimeSpent(prev => prev + 1);
+        setTimeSpent((prev: number) => prev + 1);
       }
     }, 60000); // Update every minute
 
@@ -74,7 +102,9 @@ export default function ReviewInterface({ review }: ReviewInterfaceProps) {
     }
 
     if (!reviewData.contentEvaluation || !reviewData.publicComments) {
-      alert("Please complete the content evaluation and public comments before submitting");
+      alert(
+        "Please complete the content evaluation and public comments before submitting"
+      );
       return;
     }
 
@@ -113,8 +143,10 @@ export default function ReviewInterface({ review }: ReviewInterfaceProps) {
       reviewData.recommendation,
       reviewData.publicComments,
     ];
-    
-    const completedFields = fields.filter(field => field && field.trim().length > 0).length;
+
+    const completedFields = fields.filter(
+      (field) => field && field.trim().length > 0
+    ).length;
     return Math.round((completedFields / fields.length) * 100);
   };
 
@@ -135,7 +167,8 @@ export default function ReviewInterface({ review }: ReviewInterfaceProps) {
               Review: {review.manuscript.title}
             </h1>
             <p className="text-sm text-gray-600">
-              Author: {review.manuscript.user.name} • Type: {review.manuscript.type}
+              Author: {review.manuscript.user.name} • Type:{" "}
+              {review.manuscript.type}
             </p>
           </div>
           <div className="flex items-center space-x-4">
@@ -190,10 +223,7 @@ export default function ReviewInterface({ review }: ReviewInterfaceProps) {
           />
         )}
         {activeTab === "communication" && (
-          <CommunicationPanel
-            review={review}
-            messages={review.messages}
-          />
+          <CommunicationPanel review={review} messages={review.messages} />
         )}
         {activeTab === "progress" && (
           <ReviewProgress

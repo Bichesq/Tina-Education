@@ -31,33 +31,33 @@ async function getRecentActivities(userId: string) {
 
     // Combine and format activities
     const activities = [
-      ...notifications.map(notification => ({
+      ...notifications.map((notification) => ({
         id: notification.id,
-        type: 'notification',
+        type: "notification",
         icon: getNotificationIcon(notification.type),
         title: notification.title,
         description: notification.message,
         timestamp: notification.createdAt,
-        isRead: notification.isRead
+        isRead: notification.isRead,
       })),
-      ...recentManuscripts.map(manuscript => ({
+      ...recentManuscripts.map((manuscript) => ({
         id: manuscript.id,
-        type: 'manuscript',
-        icon: '📝',
-        title: 'Manuscript Created',
+        type: "manuscript",
+        icon: "📝",
+        title: "Manuscript Created",
         description: `Created "${manuscript.title}"`,
         timestamp: manuscript.createdAt,
-        isRead: true
+        isRead: true,
       })),
-      ...recentReviews.map(review => ({
+      ...recentReviews.map((review) => ({
         id: review.id,
-        type: 'review',
-        icon: '👀',
-        title: 'Review Activity',
-        description: `${review.status === 'COMPLETED' ? 'Completed' : 'Started'} review for "${review.manuscript.title}"`,
+        type: "review",
+        icon: "👀",
+        title: "Review Activity",
+        description: `${review.status === "REVIEW_SUBMITTED" ? "Completed" : "Started"} review for "${review.manuscript.title}"`,
         timestamp: review.createdAt,
-        isRead: true
-      }))
+        isRead: true,
+      })),
     ];
 
     // Sort by timestamp and take most recent
@@ -87,7 +87,7 @@ function getNotificationIcon(type: string) {
 function formatTimeAgo(date: Date) {
   const now = new Date();
   const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-  
+
   if (diffInHours < 1) return "Just now";
   if (diffInHours < 24) return `${diffInHours}h ago`;
   if (diffInHours < 48) return "Yesterday";
@@ -122,16 +122,22 @@ export default async function RecentActivities() {
         {activities.length === 0 ? (
           <div className="text-center py-8">
             <div className="text-4xl mb-4">🎯</div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No recent activities</h3>
-            <p className="text-gray-500">Your activities will appear here as you use the system.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No recent activities
+            </h3>
+            <p className="text-gray-500">
+              Your activities will appear here as you use the system.
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
             {activities.map((activity, index) => (
-              <div 
-                key={activity.id} 
+              <div
+                key={activity.id}
                 className={`flex items-start space-x-4 ${
-                  index < activities.length - 1 ? 'pb-4 border-b border-gray-200' : ''
+                  index < activities.length - 1
+                    ? "pb-4 border-b border-gray-200"
+                    : ""
                 }`}
               >
                 <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-900 flex-shrink-0">
@@ -139,14 +145,16 @@ export default async function RecentActivities() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <h4 className={`font-medium ${
-                      activity.type === 'notification' && !activity.isRead 
-                        ? 'text-blue-900' 
-                        : 'text-gray-800'
-                    }`}>
+                    <h4
+                      className={`font-medium ${
+                        activity.type === "notification" && !activity.isRead
+                          ? "text-blue-900"
+                          : "text-gray-800"
+                      }`}
+                    >
                       {activity.title}
                     </h4>
-                    {activity.type === 'notification' && !activity.isRead && (
+                    {activity.type === "notification" && !activity.isRead && (
                       <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                     )}
                   </div>

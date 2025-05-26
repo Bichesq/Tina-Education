@@ -49,7 +49,7 @@ export async function POST(request: Request) {
           pdfFile: pdfUrl,
         },
       });
-    } catch (prismaError: any) {
+    } catch (prismaError: unknown) {
       console.error("Prisma manuscript.create failed:", prismaError, {
         author_id: session.user.id,
         title,
@@ -61,10 +61,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error: "Failed to create manuscript",
-          details:
-            prismaError && prismaError.message
-              ? prismaError.message
-              : prismaError,
+          details: prismaError instanceof Error ? prismaError.message : String(prismaError),
         },
         { status: 500 }
       );
@@ -187,6 +184,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, manuscript });
   } catch (error) {
+    console.error("Unexpected error in manuscript creation:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { auth } from "@/auth";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
@@ -41,8 +40,8 @@ export default function Submit() {
       setAbstract("");
       setContent("");
       setKeywords("");
-    } catch (err: any) {
-      setError(err.message || "Submission error");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Submission error");
     } finally {
       setSubmitting(false);
     }
