@@ -1,11 +1,12 @@
 import Link from "next/link";
 import React from "react";
+import FeaturedPublications from "./components/home/FeaturedPublications";
 
 const Home: React.FC = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Secondary Navigation */}
-      <div className="bg-white border-b border-gray-200 shadow-sm">
+      <div className="bg-white border-b mt-18 border-gray-200 shadow-sm">
         <div className="container mx-auto w-[90%] max-w-7xl">
           <ul className="flex py-4 space-x-8">
             <li>
@@ -140,99 +141,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Featured Publications Section */}
-      <section id="books" className="py-16 bg-white">
-        <div className="container mx-auto w-[90%] max-w-7xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Featured Publications
-            </h2>
-            <p className="text-lg text-gray-600">
-              Discover the latest academic works and research from our community
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-              <div className="aspect-[3/4] bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-                <div className="text-white text-center p-6">
-                  <div className="text-4xl mb-4">📖</div>
-                  <h3 className="text-lg font-bold">The Marital Journey</h3>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="font-bold text-gray-900 mb-2">
-                  The Marital Journey
-                </h3>
-                <p className="text-gray-600 mb-4">by Nkwain Sam</p>
-                <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                    Book
-                  </span>
-                  <button className="text-blue-900 hover:text-blue-700 font-medium text-sm">
-                    Read More
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-              <div className="aspect-[3/4] bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center">
-                <div className="text-white text-center p-6">
-                  <div className="text-4xl mb-4">📄</div>
-                  <h3 className="text-lg font-bold">Research Methods</h3>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="font-bold text-gray-900 mb-2">
-                  Advanced Research Methods
-                </h3>
-                <p className="text-gray-600 mb-4">by Dr. Academic Author</p>
-                <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                    Journal
-                  </span>
-                  <button className="text-blue-900 hover:text-blue-700 font-medium text-sm">
-                    Read More
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-              <div className="aspect-[3/4] bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center">
-                <div className="text-white text-center p-6">
-                  <div className="text-4xl mb-4">💻</div>
-                  <h3 className="text-lg font-bold">Digital Publishing</h3>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="font-bold text-gray-900 mb-2">
-                  Digital Publishing Guide
-                </h3>
-                <p className="text-gray-600 mb-4">by Tech Writer</p>
-                <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
-                    E-book
-                  </span>
-                  <button className="text-blue-900 hover:text-blue-700 font-medium text-sm">
-                    Read More
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-center mt-12">
-            <Link
-              href="/dashboard/publications"
-              className="inline-flex items-center px-8 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium"
-            >
-              View All Publications
-              <span className="ml-2">→</span>
-            </Link>
-          </div>
-        </div>
-      </section>
+      <FeaturedPublications />
 
       {/* Call to Action Section */}
       <section className="py-16 bg-gray-50">
