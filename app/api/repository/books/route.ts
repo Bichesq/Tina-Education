@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../prisma";
+import { Prisma } from "@prisma/client";
 
 export async function GET(request: Request) {
   try {
@@ -11,18 +12,10 @@ export async function GET(request: Request) {
     const sortOrder = searchParams.get("sortOrder") || "desc";
 
     // Build where clause for books and ebooks
-    const where: {
-      type: { in: string[] };
-      OR?: Array<{
-        title?: { contains: string; mode: "insensitive" };
-        abstract?: { contains: string; mode: "insensitive" };
-        keywords?: { contains: string; mode: "insensitive" };
-        user?: { name?: { contains: string; mode: "insensitive" } };
-      }>;
-    } = {
+    const where: Prisma.PublicationWhereInput = {
       type: {
-        in: ["BOOK", "EBOOK", "AUDIOBOOK"]
-      }
+        in: ["BOOK", "EBOOK", "AUDIOBOOK"],
+      },
     };
 
     if (search) {

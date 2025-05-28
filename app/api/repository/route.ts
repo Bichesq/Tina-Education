@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../prisma";
-import { Pub_type } from "@prisma/client";
+import { Pub_type, Prisma } from "@prisma/client";
 
 export async function GET(request: Request) {
   try {
@@ -13,15 +13,7 @@ export async function GET(request: Request) {
     const sortOrder = searchParams.get("sortOrder") || "desc";
 
     // Build where clause
-    const where: {
-      type?: Pub_type;
-      OR?: Array<{
-        title?: { contains: string; mode: "insensitive" };
-        abstract?: { contains: string; mode: "insensitive" };
-        keywords?: { contains: string; mode: "insensitive" };
-        user?: { name?: { contains: string; mode: "insensitive" } };
-      }>;
-    } = {};
+    const where: Prisma.PublicationWhereInput = {};
 
     if (type) {
       where.type = type;
@@ -32,7 +24,7 @@ export async function GET(request: Request) {
         { title: { contains: search, mode: "insensitive" } },
         { abstract: { contains: search, mode: "insensitive" } },
         { keywords: { contains: search, mode: "insensitive" } },
-        { user: { name: { contains: search, mode: "insensitive" } } }
+        { user: { name: { contains: search, mode: "insensitive" } } },
       ];
     }
 
@@ -45,14 +37,14 @@ export async function GET(request: Request) {
         where,
         include: {
           user: {
-            select: { name: true, email: true }
-          }
+            select: { name: true, email: true },
+          },
         },
         orderBy: { [sortBy]: sortOrder },
         skip,
         take: limit,
       }),
-      prisma.publication.count({ where })
+      prisma.publication.count({ where }),
     ]);
 
     // Calculate pagination info
@@ -61,7 +53,7 @@ export async function GET(request: Request) {
     const hasPrevPage = page > 1;
 
     return NextResponse.json({
-      publications: publications.map(pub => ({
+      publications: publications.map((pub) => ({
         ...pub,
         createdAt: pub.createdAt.toISOString(),
         updatedAt: pub.updatedAt.toISOString(),
@@ -72,8 +64,8 @@ export async function GET(request: Request) {
         totalCount,
         hasNextPage,
         hasPrevPage,
-        limit
-      }
+        limit,
+      },
     });
   } catch (error) {
     console.error("Failed to fetch repository publications:", error);

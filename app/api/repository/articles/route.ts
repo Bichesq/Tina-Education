@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../prisma";
+import { Prisma } from "@prisma/client";
 
 export async function GET(request: Request) {
   try {
@@ -11,16 +12,8 @@ export async function GET(request: Request) {
     const sortOrder = searchParams.get("sortOrder") || "desc";
 
     // Build where clause for articles
-    const where: {
-      type: string;
-      OR?: Array<{
-        title?: { contains: string; mode: "insensitive" };
-        abstract?: { contains: string; mode: "insensitive" };
-        keywords?: { contains: string; mode: "insensitive" };
-        user?: { name?: { contains: string; mode: "insensitive" } };
-      }>;
-    } = {
-      type: "ARTICLE"
+    const where: Prisma.PublicationWhereInput = {
+      type: "ARTICLE",
     };
 
     if (search) {
