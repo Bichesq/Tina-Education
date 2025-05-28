@@ -38,7 +38,8 @@ async function ToolsContent() {
     {
       id: "grammar-checker",
       name: "Grammar & Style Checker",
-      description: "Improve your writing with advanced grammar and style suggestions",
+      description:
+        "Improve your writing with advanced grammar and style suggestions",
       icon: "✏️",
       color: "bg-green-100 text-green-800",
       status: "Coming Soon",
@@ -47,7 +48,8 @@ async function ToolsContent() {
     {
       id: "reference-manager",
       name: "Reference Manager",
-      description: "Organize and manage your research references and bibliography",
+      description:
+        "Organize and manage your research references and bibliography",
       icon: "📖",
       color: "bg-purple-100 text-purple-800",
       status: "Coming Soon",
@@ -56,7 +58,8 @@ async function ToolsContent() {
     {
       id: "word-counter",
       name: "Word Counter & Analytics",
-      description: "Count words, characters, and analyze your writing statistics",
+      description:
+        "Count words, characters, and analyze your writing statistics",
       icon: "📊",
       color: "bg-orange-100 text-orange-800",
       status: "Available",
@@ -128,7 +131,9 @@ async function ToolsContent() {
     <div className="space-y-8">
       {/* Quick Actions */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Quick Actions
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {quickActions.map((action) => (
             <Link
@@ -148,7 +153,9 @@ async function ToolsContent() {
 
       {/* Writing Tools Grid */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Writing Tools</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">
+          Writing Tools
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tools.map((tool) => (
             <div
@@ -169,15 +176,13 @@ async function ToolsContent() {
                   {tool.status}
                 </span>
               </div>
-              
+
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 {tool.name}
               </h3>
-              
-              <p className="text-gray-600 text-sm mb-4">
-                {tool.description}
-              </p>
-              
+
+              <p className="text-gray-600 text-sm mb-4">{tool.description}</p>
+
               <div className="flex justify-between items-center">
                 {tool.status === "Available" ? (
                   <Link
@@ -189,7 +194,7 @@ async function ToolsContent() {
                 ) : (
                   <span className="text-gray-400 text-sm">Coming Soon</span>
                 )}
-                
+
                 <button className="text-gray-400 hover:text-gray-600">
                   <span className="text-lg">ℹ️</span>
                 </button>
@@ -201,7 +206,9 @@ async function ToolsContent() {
 
       {/* Recent Tools */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Recently Used</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Recently Used
+        </h2>
         <div className="text-center py-8">
           <div className="text-4xl mb-4">🕐</div>
           <p className="text-gray-500">
@@ -212,7 +219,9 @@ async function ToolsContent() {
 
       {/* Help & Resources */}
       <div className="bg-gray-50 rounded-lg p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Help & Resources</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Help & Resources
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link
             href="/help/writing-guide"
@@ -221,10 +230,12 @@ async function ToolsContent() {
             <span className="text-2xl mr-3">📚</span>
             <div>
               <p className="font-medium text-gray-900">Writing Guide</p>
-              <p className="text-sm text-gray-500">Tips and best practices for academic writing</p>
+              <p className="text-sm text-gray-500">
+                Tips and best practices for academic writing
+              </p>
             </div>
           </Link>
-          
+
           <Link
             href="/help/citation-styles"
             className="flex items-center p-4 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow"
@@ -232,10 +243,12 @@ async function ToolsContent() {
             <span className="text-2xl mr-3">📖</span>
             <div>
               <p className="font-medium text-gray-900">Citation Styles</p>
-              <p className="text-sm text-gray-500">Learn about different citation formats</p>
+              <p className="text-sm text-gray-500">
+                Learn about different citation formats
+              </p>
             </div>
           </Link>
-          
+
           <Link
             href="/help/tutorials"
             className="flex items-center p-4 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow"
@@ -243,10 +256,12 @@ async function ToolsContent() {
             <span className="text-2xl mr-3">🎥</span>
             <div>
               <p className="font-medium text-gray-900">Video Tutorials</p>
-              <p className="text-sm text-gray-500">Watch step-by-step tool tutorials</p>
+              <p className="text-sm text-gray-500">
+                Watch step-by-step tool tutorials
+              </p>
             </div>
           </Link>
-          
+
           <Link
             href="/help/support"
             className="flex items-center p-4 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow"
@@ -254,7 +269,7 @@ async function ToolsContent() {
             <span className="text-2xl mr-3">💬</span>
             <div>
               <p className="font-medium text-gray-900">Get Support</p>
-              <p className="text-sm text-gray-500">Contact our support team</p>
+              <p className="text-sm text-gray-400">Contact our support team</p>
             </div>
           </Link>
         </div>
@@ -274,12 +289,15 @@ function ToolsLoading() {
           ))}
         </div>
       </div>
-      
+
       <div>
         <div className="h-6 bg-gray-200 rounded w-32 mb-6"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(9)].map((_, i) => (
-            <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 animate-pulse">
+            <div
+              key={i}
+              className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 animate-pulse"
+            >
               <div className="flex justify-between mb-4">
                 <div className="w-12 h-12 bg-gray-200 rounded-lg"></div>
                 <div className="w-16 h-4 bg-gray-200 rounded"></div>

@@ -88,16 +88,19 @@ export default async function PublicationStats() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
       {statItems.map((item, index) => (
-        <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className={`w-12 h-12 rounded-lg ${item.color} flex items-center justify-center text-xl mb-3`}>
+        <div
+          key={index}
+          className="bg-white rounded-lg shadow-sm border border-gray-200 p-4"
+        >
+          <div
+            className={`w-12 h-12 rounded-lg ${item.color} flex items-center justify-center text-xl mb-3`}
+          >
             {item.icon}
           </div>
           <div className="text-2xl font-bold text-gray-900 mb-1">
             {item.value}
           </div>
-          <div className="text-sm text-gray-600">
-            {item.label}
-          </div>
+          <div className="text-sm text-gray-400">{item.label}</div>
         </div>
       ))}
     </div>

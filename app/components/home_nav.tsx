@@ -42,12 +42,12 @@ export default function HomeNav() {
                 </Link>
               </li>
               <li className="ml-0 md:ml-8">
-                <Link href="#" className="text-gray-800 font-medium">
+                <Link href="/books" className="text-gray-800 font-medium">
                   Books
                 </Link>
               </li>
               <li className="ml-0 md:ml-8">
-                <Link href="#" className="text-gray-800 font-medium">
+                <Link href="/journals" className="text-gray-800 font-medium">
                   Journals
                 </Link>
               </li>

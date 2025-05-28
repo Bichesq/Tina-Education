@@ -55,7 +55,7 @@ export default function Sidebar() {
         </ul>
 
         <div className="mt-5 pt-5 border-t border-gray-200">
-          <h3 className="px-5 mb-4 text-gray-500 text-sm uppercase">
+          <h3 className="px-5 mb-4 text-gray-400 text-sm uppercase">
             Collaboration
           </h3>
           <ul>
@@ -78,7 +78,23 @@ export default function Sidebar() {
         </div>
 
         <div className="mt-5 pt-5 border-t border-gray-200">
-          <h3 className="px-5 mb-4 text-gray-500 text-sm uppercase">
+          <h3 className="px-5 mb-4 text-gray-400 text-sm uppercase">
+            Repository
+          </h3>
+          <ul>
+            <SidebarItem
+              href="/repository"
+              icon="📚"
+              label="All Publications"
+            />
+            <SidebarItem href="/books" icon="📖" label="Books" />
+            <SidebarItem href="/journals" icon="📰" label="Journals" />
+            <SidebarItem href="/articles" icon="📄" label="Articles" />
+          </ul>
+        </div>
+
+        <div className="mt-5 pt-5 border-t border-gray-200">
+          <h3 className="px-5 mb-4 text-gray-400 text-sm uppercase">
             Resources
           </h3>
           <ul>

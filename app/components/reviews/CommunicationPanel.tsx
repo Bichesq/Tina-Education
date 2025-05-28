@@ -148,7 +148,7 @@ export default function CommunicationPanel({
                         <span className="mr-1">{senderInfo.icon}</span>
                         {senderInfo.label}
                       </span>
-                      <span className="ml-2 text-xs text-gray-500">
+                      <span className="ml-2 text-xs text-gray-400">
                         {message.user.name || "Unknown"}
                       </span>
                       <span className="ml-2 text-xs text-gray-400">

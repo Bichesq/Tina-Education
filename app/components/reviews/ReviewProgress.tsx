@@ -133,7 +133,7 @@ export default function ReviewProgress({
                   className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
                     step.completed
                       ? "bg-green-500 text-white"
-                      : "bg-gray-200 text-gray-600"
+                      : "bg-gray-200 text-gray-400"
                   }`}
                 >
                   {step.completed ? "✓" : step.id}
@@ -141,7 +141,7 @@ export default function ReviewProgress({
                 <div className="ml-4 flex-1">
                   <p
                     className={`text-sm font-medium ${
-                      step.completed ? "text-gray-900" : "text-gray-500"
+                      step.completed ? "text-gray-900" : "text-gray-400"
                     }`}
                   >
                     {step.name}

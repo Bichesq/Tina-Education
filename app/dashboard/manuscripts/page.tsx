@@ -178,7 +178,7 @@ async function ManuscriptsList() {
         <h3 className="text-lg font-medium text-gray-900 mb-2">
           Access Denied
         </h3>
-        <p className="text-gray-500">Please log in to view your manuscripts.</p>
+        <p className="text-gray-400">Please log in to view your manuscripts.</p>
       </div>
     );
   }
@@ -192,7 +192,7 @@ async function ManuscriptsList() {
         <h3 className="text-lg font-medium text-gray-900 mb-2">
           No Manuscripts Yet
         </h3>
-        <p className="text-gray-500 mb-6">
+        <p className="text-gray-400 mb-6">
           Start your academic journey by creating your first manuscript.
         </p>
         <Link
@@ -230,7 +230,7 @@ async function ManuscriptsList() {
                     {status.icon} {status.label}
                   </span>
                 </div>
-                <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
+                <div className="flex items-center space-x-4 text-sm text-gray-400 mb-3">
                   <span className={`px-2 py-1 rounded ${type.color}`}>
                     {type.icon} {type.label}
                   </span>
@@ -240,7 +240,7 @@ async function ManuscriptsList() {
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-sm text-gray-500 mb-1">Progress</div>
+                <div className="text-sm text-gray-400 mb-1">Progress</div>
                 <div className="flex items-center space-x-2">
                   <div className="w-20 bg-gray-200 rounded-full h-2">
                     <div
@@ -278,7 +278,7 @@ async function ManuscriptsList() {
                       </span>
                     ))}
                   {manuscript.keywords.split(",").length > 5 && (
-                    <span className="px-2 py-1 bg-gray-100 text-gray-500 rounded text-sm">
+                    <span className="px-2 py-1 bg-gray-100 text-gray-400 rounded text-sm">
                       +{manuscript.keywords.split(",").length - 5} more
                     </span>
                   )}
@@ -287,7 +287,7 @@ async function ManuscriptsList() {
             )}
 
             <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-              <div className="flex items-center space-x-6 text-sm text-gray-600">
+              <div className="flex items-center space-x-6 text-sm text-gray-400">
                 <div className="flex items-center space-x-1">
                   <span>📊</span>
                   <span>{manuscript.reviews.length} reviews</span>
@@ -380,7 +380,7 @@ export default function ManuscriptsPage() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               My Manuscripts
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-400">
               Manage your academic manuscripts and track their progress
             </p>
           </div>

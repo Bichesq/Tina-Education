@@ -103,7 +103,7 @@ export default async function RecentActivities() {
         <div className="flex justify-between items-center mb-5">
           <h2 className="text-xl font-bold text-gray-800">Recent Activities</h2>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-8 text-center text-gray-500">
+        <div className="bg-white rounded-lg shadow-sm p-8 text-center text-gray-400">
           Please log in to view your activities.
         </div>
       </div>
@@ -125,7 +125,7 @@ export default async function RecentActivities() {
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               No recent activities
             </h3>
-            <p className="text-gray-500">
+            <p className="text-gray-400">
               Your activities will appear here as you use the system.
             </p>
           </div>

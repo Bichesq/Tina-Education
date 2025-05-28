@@ -10,7 +10,7 @@ const Home: React.FC = () => {
           <ul className="flex py-4 space-x-8">
             <li>
               <Link
-                href="#books"
+                href="/books"
                 className="text-gray-800 font-medium hover:text-blue-900 transition-colors"
               >
                 Books
@@ -18,15 +18,15 @@ const Home: React.FC = () => {
             </li>
             <li>
               <Link
-                href="#authors"
+                href="/articles"
                 className="text-gray-800 font-medium hover:text-blue-900 transition-colors"
               >
-                Authors
+                Articles
               </Link>
             </li>
             <li>
               <Link
-                href="#journals"
+                href="/journals"
                 className="text-gray-800 font-medium hover:text-blue-900 transition-colors"
               >
                 Journals

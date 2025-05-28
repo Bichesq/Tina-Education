@@ -71,8 +71,12 @@ async function PublicationsList() {
     return (
       <div className="text-center py-12">
         <div className="text-6xl mb-4">🔒</div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Access Denied</h3>
-        <p className="text-gray-500">Please log in to view your publications.</p>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">
+          Access Denied
+        </h3>
+        <p className="text-gray-500">
+          Please log in to view your publications.
+        </p>
       </div>
     );
   }
@@ -86,7 +90,7 @@ async function PublicationsList() {
         <h3 className="text-lg font-medium text-gray-900 mb-2">
           No Publications Yet
         </h3>
-        <p className="text-gray-500 mb-6">
+        <p className="text-gray-400 mb-6">
           You haven&apos;t published any work yet. Start by creating and
           submitting your first manuscript.
         </p>
@@ -116,7 +120,7 @@ async function PublicationsList() {
                 <h3 className="text-xl font-bold text-gray-900 mb-1">
                   {publication.title}
                 </h3>
-                <div className="flex items-center space-x-3 text-sm text-gray-600">
+                <div className="flex items-center space-x-3 text-sm text-gray-400">
                   <span>By {publication.user.name}</span>
                   <span>•</span>
                   <span>{formatDate(publication.createdAt)}</span>
@@ -152,7 +156,7 @@ async function PublicationsList() {
           )}
 
           <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-            <div className="flex items-center space-x-6 text-sm text-gray-600">
+            <div className="flex items-center space-x-6 text-sm text-gray-400">
               <div className="flex items-center space-x-1">
                 <span>👁️</span>
                 <span>0 views</span>
@@ -191,7 +195,10 @@ function PublicationsLoading() {
   return (
     <div className="space-y-6">
       {[...Array(3)].map((_, i) => (
-        <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 animate-pulse">
+        <div
+          key={i}
+          className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 animate-pulse"
+        >
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gray-200 rounded"></div>
@@ -234,7 +241,7 @@ export default function PublicationsPage() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               My Publications
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-400">
               Manage and view all your published academic work
             </p>
           </div>

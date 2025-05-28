@@ -90,7 +90,7 @@ export default function Dashboard() {
             <h3 className="font-bold text-gray-400 mb-5">
               Publication Performance
             </h3>
-            <div className="flex-1 bg-gray-100 rounded flex items-center justify-center text-gray-500">
+            <div className="flex-1 bg-gray-100 rounded flex items-center justify-center text-gray-400">
               [Views & Downloads Chart]
             </div>
           </div>
@@ -99,7 +99,7 @@ export default function Dashboard() {
             <h3 className="font-bold text-gray-400 mb-5">
               Reader Demographics
             </h3>
-            <div className="flex-1 bg-gray-100 rounded flex items-center justify-center text-gray-500">
+            <div className="flex-1 bg-gray-100 rounded flex items-center justify-center text-gray-400">
               [Demographics Chart]
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function Dashboard() {
                 <h4 className="font-bold text-gray-400 mb-1">
                   Conference Paper Submission
                 </h4>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-400 text-sm">
                   EdTech Global Summit 2025
                 </p>
               </div>
@@ -142,7 +142,7 @@ export default function Dashboard() {
                 <h4 className="font-bold text-gray-400 mb-1">
                   Peer Review Deadline
                 </h4>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-400 text-sm">
                   Educational Psychology Journal
                 </p>
               </div>
@@ -157,7 +157,7 @@ export default function Dashboard() {
                 <h4 className="font-bold text-gray-400 mb-1">
                   Book Chapter Draft
                 </h4>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-400 text-sm">
                   Modern Teaching Anthology
                 </p>
               </div>
