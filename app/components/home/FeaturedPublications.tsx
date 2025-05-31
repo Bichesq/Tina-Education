@@ -121,14 +121,14 @@ export default async function FeaturedPublications() {
             </a>
             <a
               href="/journals"
-              className="inline-flex items-center px-8 py-3 bg-green-900 text-white rounded-lg hover:bg-green-800 transition-colors font-medium"
+              className="inline-flex items-center px-8 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
             >
               Browse All Journals
               <span className="ml-2">→</span>
             </a>
             <a
               href="/articles"
-              className="inline-flex items-center px-8 py-3 bg-purple-900 text-white rounded-lg hover:bg-purple-800 transition-colors font-medium"
+              className="inline-flex items-center px-8 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium"
             >
               Browse All Articles
               <span className="ml-2">→</span>

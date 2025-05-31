@@ -15,7 +15,14 @@ export async function POST(request: Request) {
     );
 
   try {
-    const { title, abstract, content, keywords } = await request.json();
+    const {
+      title,
+      abstract,
+      content,
+      keywords,
+      uploadedFile,
+      uploadedFileName,
+    } = await request.json();
 
     console.log("📄 Starting manuscript submission process...");
     console.log(`📝 Title: ${title}`);
@@ -25,7 +32,7 @@ export async function POST(request: Request) {
     const pdfUrl = await generateAndStorePdf(
       content,
       title,
-      session.user?.name || 'Unknown Author'
+      session.user?.name || "Unknown Author"
     );
 
     if (!pdfUrl) {
@@ -47,6 +54,8 @@ export async function POST(request: Request) {
           content,
           keywords,
           pdfFile: pdfUrl,
+          uploadedFile: uploadedFile || null,
+          uploadedFileName: uploadedFileName || null,
         },
       });
     } catch (prismaError: unknown) {
@@ -57,11 +66,16 @@ export async function POST(request: Request) {
         content,
         keywords,
         pdfFile: pdfUrl,
+        uploadedFile: uploadedFile || null,
+        uploadedFileName: uploadedFileName || null,
       });
       return NextResponse.json(
         {
           error: "Failed to create manuscript",
-          details: prismaError instanceof Error ? prismaError.message : String(prismaError),
+          details:
+            prismaError instanceof Error
+              ? prismaError.message
+              : String(prismaError),
         },
         { status: 500 }
       );

@@ -64,13 +64,13 @@ const Home: React.FC = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
             <Link
               href="/dashboard"
-              className="px-8 py-3 bg-white text-blue-900 rounded-lg font-medium hover:bg-gray-100 transition-colors shadow-lg"
+              className="px-8 py-3 border-2 border-white text-white rounded-lg font-medium hover:bg-white hover:text-blue-900 transition-colors"
             >
               Get Started
             </Link>
             <Link
               href="#journals"
-              className="px-8 py-3 border-2 border-white text-white rounded-lg font-medium hover:bg-white hover:text-blue-900 transition-colors"
+              className="px-8 py-3 bg-white text-blue-900 rounded-lg font-medium hover:bg-gray-100 transition-colors shadow-lg"
             >
               Explore Journals
             </Link>
@@ -221,7 +221,7 @@ const Home: React.FC = () => {
               <div className="text-center">
                 <Link
                   href="/dashboard/reviews"
-                  className="inline-flex items-center px-6 py-3 bg-green-900 text-white rounded-lg hover:bg-green-800 transition-colors font-medium"
+                  className="inline-flex items-center px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium"
                 >
                   Start Reviewing
                   <span className="ml-2">→</span>

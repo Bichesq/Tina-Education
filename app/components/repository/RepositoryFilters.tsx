@@ -55,7 +55,7 @@ export default function RepositoryFilters({
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search publications, authors, keywords..."
-            className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400"
+            className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-500"
             disabled={loading}
           />
           <div className="absolute inset-y-0 right-0 flex items-center">
@@ -75,13 +75,15 @@ export default function RepositoryFilters({
         <div className="flex items-center space-x-4">
           <button
             onClick={() => setShowAdvanced(!showAdvanced)}
-            className="flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center space-x-2 px-3 py-2 border border-gray-300 text-gray-500 rounded-lg hover:bg-gray-50 transition-colors"
           >
-            <FaFilter className="h-4 w-4" />
+            <FaFilter className="h-4 w-4 " />
             <span>Filters</span>
           </button>
 
-          {(filters.search || filters.sortBy !== "createdAt" || filters.sortOrder !== "desc") && (
+          {(filters.search ||
+            filters.sortBy !== "createdAt" ||
+            filters.sortOrder !== "desc") && (
             <button
               onClick={clearFilters}
               className="px-3 py-2 text-sm text-gray-400 hover:text-gray-800 transition-colors"
@@ -97,7 +99,7 @@ export default function RepositoryFilters({
           <select
             value={`${filters.sortBy}-${filters.sortOrder}`}
             onChange={(e) => {
-              const [sortBy, sortOrder] = e.target.value.split('-');
+              const [sortBy, sortOrder] = e.target.value.split("-");
               handleSortChange(sortBy, sortOrder);
             }}
             className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700"
@@ -121,7 +123,9 @@ export default function RepositoryFilters({
               </label>
               <select
                 value={filters.sortBy}
-                onChange={(e) => handleSortChange(e.target.value, filters.sortOrder)}
+                onChange={(e) =>
+                  handleSortChange(e.target.value, filters.sortOrder)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700"
                 disabled={loading}
               >
@@ -137,7 +141,9 @@ export default function RepositoryFilters({
               </label>
               <select
                 value={filters.sortOrder}
-                onChange={(e) => handleSortChange(filters.sortBy, e.target.value)}
+                onChange={(e) =>
+                  handleSortChange(filters.sortBy, e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700"
                 disabled={loading}
               >
@@ -160,7 +166,9 @@ export default function RepositoryFilters({
       )}
 
       {/* Active Filters Display */}
-      {(filters.search || filters.sortBy !== "createdAt" || filters.sortOrder !== "desc") && (
+      {(filters.search ||
+        filters.sortBy !== "createdAt" ||
+        filters.sortOrder !== "desc") && (
         <div className="mt-4 pt-4 border-t border-gray-200">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm text-gray-400">Active filters:</span>
@@ -180,7 +188,8 @@ export default function RepositoryFilters({
               </span>
             )}
 
-            {(filters.sortBy !== "createdAt" || filters.sortOrder !== "desc") && (
+            {(filters.sortBy !== "createdAt" ||
+              filters.sortOrder !== "desc") && (
               <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800">
                 Sort: {filters.sortBy} ({filters.sortOrder})
                 <button

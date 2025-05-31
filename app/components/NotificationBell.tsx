@@ -10,19 +10,32 @@ export function NotificationBell() {
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    if (!session?.user?.id) {
+    // Wait for session to be fully loaded and authenticated
+    if (status === "loading" || !session?.user?.id) {
       return;
     }
 
     const fetchUnreadCount = async () => {
       try {
-        const response = await fetch("/api/auth/notifications");
+        const response = await fetch("/api/auth/notifications", {
+          headers: {
+            "Cache-Control": "no-cache",
+          },
+        });
+
         if (response.ok) {
           const data = await response.json();
           setUnreadCount(data.unreadCount || 0);
+        } else if (response.status === 401) {
+          // Unauthorized - session might have expired
+          setUnreadCount(0);
         } else {
-          console.warn("Failed to fetch notification count:", response.status);
-          // Keep previous count on error
+          // Other errors - keep previous count
+          console.warn(
+            "Failed to fetch notification count:",
+            response.status,
+            response.statusText
+          );
         }
       } catch (error) {
         // Silently handle network errors to avoid console spam
@@ -31,18 +44,20 @@ export function NotificationBell() {
           return;
         }
         console.error("Failed to fetch notification count:", error);
-      } finally {
-        // Loading state removed
       }
     };
 
-    fetchUnreadCount();
+    // Initial fetch with a small delay to ensure session is stable
+    const timeoutId = setTimeout(fetchUnreadCount, 100);
 
     // Poll for updates every 30 seconds
     const interval = setInterval(fetchUnreadCount, 30000);
 
-    return () => clearInterval(interval);
-  }, [session?.user?.id]);
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(interval);
+    };
+  }, [session?.user?.id, status]);
 
   // Wait for session to load
   if (status === "loading") {

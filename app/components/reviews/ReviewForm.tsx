@@ -204,7 +204,7 @@ export default function ReviewForm({
                 onChange={(e) =>
                   handleInputChange("contentEvaluation", e.target.value)
                 }
-                className="w-full h-40 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                className="w-full h-40 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-700 placeholder-gray-500"
                 placeholder="Assess the content quality, accuracy of information, depth of analysis, relevance to the field, and contribution to existing knowledge..."
               />
             </div>
@@ -223,7 +223,7 @@ export default function ReviewForm({
                 onChange={(e) =>
                   handleInputChange("styleEvaluation", e.target.value)
                 }
-                className="w-full h-40 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                className="w-full h-40 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-700 placeholder-gray-500"
                 placeholder="Comment on writing clarity, organization structure, flow of ideas, grammar, formatting, and overall presentation..."
               />
             </div>
@@ -248,7 +248,7 @@ export default function ReviewForm({
               <textarea
                 value={reviewData.strengths}
                 onChange={(e) => handleInputChange("strengths", e.target.value)}
-                className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-700 placeholder-gray-500"
                 placeholder="Note the manuscript's key strengths, innovative aspects, well-executed sections, and valuable contributions..."
               />
             </div>
@@ -267,7 +267,7 @@ export default function ReviewForm({
                 onChange={(e) =>
                   handleInputChange("weaknesses", e.target.value)
                 }
-                className="w-full h-40 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                className="w-full h-40 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-700 placeholder-gray-500"
                 placeholder="Provide specific, constructive feedback on areas that need improvement, methodological concerns, gaps in analysis, or presentation issues..."
               />
             </div>
@@ -333,7 +333,7 @@ export default function ReviewForm({
                 onChange={(e) =>
                   handleInputChange("publicComments", e.target.value)
                 }
-                className="w-full h-40 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                className="w-full h-40 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-700 placeholder-gray-500"
                 placeholder="Provide detailed feedback for the author, including specific suggestions for improvement, questions, and recommendations..."
               />
             </div>
@@ -352,7 +352,7 @@ export default function ReviewForm({
                 onChange={(e) =>
                   handleInputChange("confidentialComments", e.target.value)
                 }
-                className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-700 placeholder-gray-500"
                 placeholder="Share any concerns, questions, or additional context that should only be seen by the editor..."
               />
             </div>

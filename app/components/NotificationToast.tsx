@@ -11,7 +11,7 @@ interface ToastNotification {
 }
 
 export default function NotificationToast() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [notifications, setNotifications] = useState<ToastNotification[]>([]);
 
   const removeNotification = useCallback((id: string) => {
@@ -36,15 +36,24 @@ export default function NotificationToast() {
 
   // Poll for new notifications (in a real app, you'd use WebSockets or Server-Sent Events)
   useEffect(() => {
-    if (!session?.user?.id) return;
+    // Wait for session to be fully loaded and authenticated
+    if (status === "loading" || !session?.user?.id) return;
 
     const checkForNewNotifications = async () => {
       try {
-        const response = await fetch("/api/auth/notifications");
+        const response = await fetch("/api/auth/notifications", {
+          headers: {
+            "Cache-Control": "no-cache",
+          },
+        });
+
         if (response.ok) {
           await response.json();
           // This is a simple implementation - in production you'd want to track which notifications are new
           // and only show toasts for truly new ones
+        } else if (response.status === 401) {
+          // Unauthorized - session might have expired, stop polling
+          return;
         } else {
           console.warn(
             "Failed to fetch notifications:",
@@ -63,11 +72,18 @@ export default function NotificationToast() {
       }
     };
 
-    // Check every 30 seconds
+    // Initial delay to ensure session is stable, then check every 30 seconds
+    const timeoutId = setTimeout(() => {
+      checkForNewNotifications(); // Initial check
+    }, 1000);
+
     const interval = setInterval(checkForNewNotifications, 30000);
 
-    return () => clearInterval(interval);
-  }, [session?.user?.id]);
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(interval);
+    };
+  }, [session?.user?.id, status]);
 
   // Expose the addNotification function globally for other components to use
   useEffect(() => {

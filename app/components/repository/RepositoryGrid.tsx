@@ -120,9 +120,9 @@ export default function RepositoryGrid({
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">{title}</h1>
-          <p className="text-xl text-gray-400">{description}</p>
+          <p className="text-xl text-gray-600">{description}</p>
           {pagination && (
-            <p className="text-sm text-gray-400 mt-2">
+            <p className="text-sm text-gray-600 mt-2">
               Showing {pagination.totalCount} {pagination.totalCount === 1 ? 'publication' : 'publications'}
             </p>
           )}
@@ -140,7 +140,7 @@ export default function RepositoryGrid({
           <div className="text-center py-12">
             <div className="text-6xl mb-4">❌</div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">Error Loading Publications</h3>
-            <p className="text-gray-400 mb-4">{error}</p>
+            <p className="text-gray-600 mb-4">{error}</p>
             <button
               onClick={fetchPublications}
               className="px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors"

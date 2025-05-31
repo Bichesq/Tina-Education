@@ -42,13 +42,13 @@ function getPublicationTypeIcon(type: Pub_type): string {
 function getPublicationTypeColor(type: Pub_type): string {
   switch (type) {
     case "BOOK":
-      return "bg-orange-100 text-orange-800";
+      return "bg-blue-100 text-blue-800";
     case "EBOOK":
       return "bg-blue-100 text-blue-800";
     case "AUDIOBOOK":
-      return "bg-purple-100 text-purple-800";
+      return "bg-gray-100 text-gray-800";
     case "JOURNAL":
-      return "bg-green-100 text-green-800";
+      return "bg-blue-100 text-blue-800";
     case "ARTICLE":
       return "bg-gray-100 text-gray-800";
     default:
@@ -56,98 +56,92 @@ function getPublicationTypeColor(type: Pub_type): string {
   }
 }
 
+function getGradientBackground(type: Pub_type): string {
+  switch (type) {
+    case "BOOK":
+      return "from-blue-500 to-blue-700";
+    case "EBOOK":
+      return "from-blue-600 to-blue-800";
+    case "AUDIOBOOK":
+      return "from-gray-600 to-gray-800";
+    case "JOURNAL":
+      return "from-blue-600 to-blue-800";
+    case "ARTICLE":
+      return "from-gray-600 to-gray-800";
+    default:
+      return "from-gray-500 to-gray-700";
+  }
+}
+
 function formatDate(dateString: string): string {
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   }).format(new Date(dateString));
 }
 
-function truncateText(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text;
-  return text.substring(0, maxLength) + "...";
-}
-
 export default function RepositoryCard({ publication }: RepositoryCardProps) {
+  const gradientClass = getGradientBackground(publication.type);
+
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
-      {/* Cover Image or Placeholder */}
-      <div className="h-48 bg-gradient-to-br from-blue-500 to-blue-700 relative">
-        {publication.cover ? (
-          <Image
-            src={publication.cover}
-            alt={publication.title}
-            fill
-            className="object-cover"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <span className="text-6xl text-white opacity-80">
-              {getPublicationTypeIcon(publication.type)}
-            </span>
-          </div>
-        )}
-        <div className="absolute top-3 right-3">
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPublicationTypeColor(publication.type)}`}>
-            {publication.type}
-          </span>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
-          {publication.title}
-        </h3>
-
-        <div className="flex items-center text-sm text-gray-400 mb-3">
-          <span>By {publication.user.name || "Unknown Author"}</span>
-          <span className="mx-2">•</span>
-          <span>{formatDate(publication.createdAt)}</span>
-        </div>
-
-        {publication.abstract && (
-          <p className="text-gray-400 text-sm mb-4 line-clamp-3">
-            {truncateText(publication.abstract, 150)}
-          </p>
-        )}
-
-        {publication.keywords && (
-          <div className="mb-4">
-            <div className="flex flex-wrap gap-1">
-              {publication.keywords.split(',').slice(0, 3).map((keyword, index) => (
-                <span
-                  key={index}
-                  className="px-2 py-1 bg-gray-100 text-gray-400 text-xs rounded-full"
-                >
-                  {keyword.trim()}
-                </span>
-              ))}
-              {publication.keywords.split(',').length > 3 && (
-                <span className="px-2 py-1 bg-gray-100 text-gray-400 text-xs rounded-full">
-                  +{publication.keywords.split(',').length - 3} more
-                </span>
-              )}
+    <Link href={`/repository/${publication.id}`} className="group block">
+      <div className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1">
+        {/* Cover Image - Book-like aspect ratio */}
+        <div
+          className={`aspect-[3/4] bg-gradient-to-br ${gradientClass} relative`}
+        >
+          {publication.cover ? (
+            <Image
+              src={publication.cover}
+              alt={publication.title}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <span className="text-6xl text-white opacity-80">
+                {getPublicationTypeIcon(publication.type)}
+              </span>
             </div>
-          </div>
-        )}
-
-        <div className="flex items-center justify-between">
-          <Link
-            href={`/repository/${publication.id}`}
-            className="inline-flex items-center px-4 py-2 bg-blue-900 text-white text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors"
-          >
-            View Details
-          </Link>
-
-          {publication.content && (
-            <button className="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
-              Download
-            </button>
           )}
         </div>
+
+        {/* Content - Similar to book card layout */}
+        <div className="p-4 space-y-2">
+          {/* Title */}
+          <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-2 group-hover:text-blue-900 transition-colors">
+            {publication.title}
+          </h3>
+
+          {/* Author */}
+          <p className="text-blue-600 text-sm font-medium">
+            {publication.user.name || "Unknown Author"}
+          </p>
+
+          {/* Price/Status - Using publication date as a substitute */}
+          <div className="flex items-center justify-between">
+            <span className="text-lg font-bold text-gray-900">Free</span>
+            
+          </div>
+
+          {/* Format */}
+          <div className="flex items-center justify-between text-sm">
+            <span
+              className={`px-2 py-1 rounded text-xs font-medium ${getPublicationTypeColor(publication.type)}`}
+            >
+              {publication.type === "EBOOK"
+                ? "Digital"
+                : publication.type.charAt(0) +
+                  publication.type.slice(1).toLowerCase()}
+            </span>
+
+            {publication.content && (
+              <span className="text-blue-600 text-xs">+1 other format</span>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }

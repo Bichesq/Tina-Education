@@ -38,6 +38,8 @@ model Manuscript {
   keywords  String
   author_id String
   pdfFile   String           // Changed from Bytes to String to store Vercel Blob URL
+  uploadedFile String?        // URL for user-uploaded PDF/Word files
+  uploadedFileName String?    // Original filename of uploaded file
   user      User             @relation(fields: [author_id], references: [id])
   reviews   Review[]
 }

@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import RichTextEditor from "./RichTextEditor";
+import FileUpload from "./FileUpload";
 
 export default function Submit() {
   // State for form fields
@@ -9,6 +11,10 @@ export default function Submit() {
   const [abstract, setAbstract] = useState("");
   const [content, setContent] = useState("");
   const [keywords, setKeywords] = useState("");
+  const [uploadedFile, setUploadedFile] = useState<{
+    url: string;
+    name: string;
+  } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -18,7 +24,11 @@ export default function Submit() {
   if (!session) {
     // Handle unauthenticated state
     return (
-      <div className="h-40"><p className="text-red-600 mb-8">You must be logged in to submit a manuscript.</p></div>
+      <div className="h-40">
+        <p className="text-red-600 mb-8">
+          You must be logged in to submit a manuscript.
+        </p>
+      </div>
     );
   }
 
@@ -32,7 +42,14 @@ export default function Submit() {
       const res = await fetch("/api/manuscripts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, abstract, content, keywords }),
+        body: JSON.stringify({
+          title,
+          abstract,
+          content,
+          keywords,
+          uploadedFile: uploadedFile?.url,
+          uploadedFileName: uploadedFile?.name,
+        }),
       });
       if (!res.ok) throw new Error("Submission failed");
       setSuccess("Manuscript submitted successfully!");
@@ -40,6 +57,7 @@ export default function Submit() {
       setAbstract("");
       setContent("");
       setKeywords("");
+      setUploadedFile(null);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Submission error");
     } finally {
@@ -55,7 +73,7 @@ export default function Submit() {
       <input
         type="text"
         id="title"
-        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 sm:text-sm"
+        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700 sm:text-sm placeholder-gray-500"
         placeholder="Enter manuscript title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
@@ -72,7 +90,7 @@ export default function Submit() {
         </label>
         <textarea
           id="abstract"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 sm:text-sm"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700 sm:text-sm placeholder-gray-500"
           placeholder="Enter Abstract"
           value={abstract}
           onChange={(e) => setAbstract(e.target.value)}
@@ -88,13 +106,11 @@ export default function Submit() {
         >
           Manuscript Content
         </label>
-        <textarea
-          id="content"
-          className="w-full h-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 sm:text-sm"
-          placeholder="Enter manuscript content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          required
+        <RichTextEditor
+          content={content}
+          onChange={setContent}
+          placeholder="Enter your manuscript content here. Use the toolbar above to format your text with headings, lists, quotes, and more..."
+          className="w-full"
         />
       </>
     ),
@@ -109,7 +125,7 @@ export default function Submit() {
         <input
           type="text"
           id="keywords"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 sm:text-sm"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700 sm:text-sm placeholder-gray-500"
           placeholder="Enter keywords (comma separated)"
           value={keywords}
           onChange={(e) => setKeywords(e.target.value)}
@@ -164,6 +180,22 @@ export default function Submit() {
           <div className="mb-4">{form.content}</div>
 
           <div className="mb-4">{form.keywords}</div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Upload Manuscript File (Optional)
+            </label>
+            <p className="text-sm text-gray-600 mb-3">
+              You can upload a PDF or Word document instead of or in addition to
+              typing your content above.
+            </p>
+            <FileUpload
+              onFileUpload={(url, name) => setUploadedFile({ url, name })}
+              onFileRemove={() => setUploadedFile(null)}
+              uploadedFile={uploadedFile}
+              disabled={submitting}
+            />
+          </div>
 
           {error && <div className="text-red-600 mb-2">{error}</div>}
           {success && <div className="text-green-600 mb-2">{success}</div>}
