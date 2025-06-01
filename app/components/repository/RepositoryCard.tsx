@@ -73,14 +73,6 @@ function getGradientBackground(type: Pub_type): string {
   }
 }
 
-function formatDate(dateString: string): string {
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(new Date(dateString));
-}
-
 export default function RepositoryCard({ publication }: RepositoryCardProps) {
   const gradientClass = getGradientBackground(publication.type);
 
