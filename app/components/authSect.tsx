@@ -15,9 +15,7 @@ export default function AuthSect() {
           >
             Sign In
           </button>
-          <button className="px-5 py-2 border border-white rounded bg-blue-900 text-white hover:bg-black">
-            Sign up
-          </button>
+          
         </>
       )}
       {session && (

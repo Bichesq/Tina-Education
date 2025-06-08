@@ -1,6 +1,15 @@
+'use client';
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+
+  const handleEmailSubmit = (e: { target: { value: any; }; }) => {
+    // setEmail: e.target.value
+    
+    return undefined
+  }
     return (
       <footer className="bg-gray-900 text-white py-8">
         <div className="container mx-auto w-[90%] max-w-7xl">
@@ -78,9 +87,9 @@ export default function Footer() {
                 <input
                   type="email"
                   placeholder="Enter your Email"
-                  className="px-4 py-2 w-full"
+                  className="bg-gray-600 px-4 py-2 w-full rounded"
                 />
-                <button className="bg-white text-gray-900 px-4 py-2">
+                <button  className="bg-white text-gray-900 ms-2 px-4 py-2 rounded">
                   Submit
                 </button>
               </div>

@@ -36,11 +36,7 @@ export default function HomeNav() {
                   Home
                 </Link>
               </li>
-              <li className="ml-0 md:ml-8">
-                <Link href="#" className="text-gray-800 font-medium">
-                  About Us
-                </Link>
-              </li>
+              
               <li className="ml-0 md:ml-8">
                 <Link href="/books" className="text-gray-800 font-medium">
                   Books
