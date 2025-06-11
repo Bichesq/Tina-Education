@@ -11,8 +11,8 @@ export async function generateAndStorePdf(
 
     // Create PDF document
     const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage();
-    const { width, height } = page.getSize();
+    let currentPage = pdfDoc.addPage();
+    const { width, height } = currentPage.getSize();
 
     // Embed font
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -24,7 +24,7 @@ export async function generateAndStorePdf(
 
     // Add title if provided
     if (title) {
-      page.drawText(title, {
+      currentPage.drawText(title, {
         x: margin,
         y: yPosition,
         size: 18,
@@ -36,7 +36,7 @@ export async function generateAndStorePdf(
 
     // Add author if provided
     if (author) {
-      page.drawText(`Author: ${author}`, {
+      currentPage.drawText(`Author: ${author}`, {
         x: margin,
         y: yPosition,
         size: 12,
@@ -46,18 +46,120 @@ export async function generateAndStorePdf(
       yPosition -= 30;
     }
 
-    // Add content with word wrapping
-    const words = content.split(' ');
-    let line = '';
-    const maxWidth = width - (margin * 2);
+    // Strip HTML tags and process content more thoroughly
+    const cleanContent = content
+      .replace(/<br\s*\/?>/gi, "\n") // Convert <br> tags to newlines
+      .replace(/<\/p>/gi, "\n\n") // Convert </p> tags to paragraph breaks
+      .replace(/<p[^>]*>/gi, "") // Remove <p> opening tags
+      .replace(/<[^>]*>/g, "") // Remove all other HTML tags
+      .replace(/&nbsp;/g, " ") // Replace non-breaking spaces
+      .replace(/&amp;/g, "&") // Replace HTML entities
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/\s+/g, " ") // Normalize whitespace
+      .trim();
 
-    for (const word of words) {
-      const testLine = line + word + ' ';
-      const textWidth = font.widthOfTextAtSize(testLine, 12);
+    // Split content into paragraphs and then words
+    const paragraphs = cleanContent.split(/\n\s*\n/).filter((p) => p.trim());
+    const maxWidth = width - margin * 2;
 
-      if (textWidth > maxWidth && line !== '') {
-        // Draw the current line
-        page.drawText(line.trim(), {
+    for (let i = 0; i < paragraphs.length; i++) {
+      const paragraph = paragraphs[i].trim();
+      if (!paragraph) continue;
+
+      // Add extra space between paragraphs (except for the first one)
+      if (i > 0) {
+        yPosition -= lineHeight * 0.5;
+      }
+
+      const words = paragraph.split(/\s+/);
+      let line = "";
+
+      for (const word of words) {
+        const testLine = line + word + " ";
+        const testWidth = font.widthOfTextAtSize(testLine, 12);
+        const wordWidth = font.widthOfTextAtSize(word, 12);
+
+        // Handle very long words that exceed maxWidth
+        if (wordWidth > maxWidth) {
+          // Draw current line if it has content
+          if (line.trim()) {
+            currentPage.drawText(line.trim(), {
+              x: margin,
+              y: yPosition,
+              size: 12,
+              font: font,
+              color: rgb(0, 0, 0),
+            });
+            yPosition -= lineHeight;
+            line = "";
+
+            // Check if we need a new page
+            if (yPosition < margin) {
+              currentPage = pdfDoc.addPage();
+              yPosition = height - margin;
+            }
+          }
+
+          // Break the long word into smaller chunks
+          let remainingWord = word;
+          while (remainingWord.length > 0) {
+            let chunk = "";
+            for (let i = 0; i < remainingWord.length; i++) {
+              const testChunk = chunk + remainingWord[i];
+              if (font.widthOfTextAtSize(testChunk, 12) > maxWidth) {
+                break;
+              }
+              chunk = testChunk;
+            }
+
+            if (chunk.length === 0) {
+              chunk = remainingWord[0]; // At least take one character
+            }
+
+            currentPage.drawText(chunk, {
+              x: margin,
+              y: yPosition,
+              size: 12,
+              font: font,
+              color: rgb(0, 0, 0),
+            });
+            yPosition -= lineHeight;
+            remainingWord = remainingWord.substring(chunk.length);
+
+            // Check if we need a new page
+            if (yPosition < margin && remainingWord.length > 0) {
+              currentPage = pdfDoc.addPage();
+              yPosition = height - margin;
+            }
+          }
+        } else if (testWidth > maxWidth && line !== "") {
+          // Draw the current line
+          currentPage.drawText(line.trim(), {
+            x: margin,
+            y: yPosition,
+            size: 12,
+            font: font,
+            color: rgb(0, 0, 0),
+          });
+          yPosition -= lineHeight;
+          line = word + " ";
+
+          // Check if we need a new page
+          if (yPosition < margin) {
+            currentPage = pdfDoc.addPage();
+            yPosition = height - margin;
+          }
+        } else {
+          line = testLine;
+        }
+      }
+
+      // Draw the last line of the paragraph
+      if (line.trim()) {
+        currentPage.drawText(line.trim(), {
           x: margin,
           y: yPosition,
           size: 12,
@@ -65,27 +167,13 @@ export async function generateAndStorePdf(
           color: rgb(0, 0, 0),
         });
         yPosition -= lineHeight;
-        line = word + ' ';
 
-        // Check if we need a new page
-        if (yPosition < margin) {
-          const newPage = pdfDoc.addPage();
-          yPosition = newPage.getSize().height - margin;
+        // Check if we need a new page after drawing the last line
+        if (yPosition < margin && i < paragraphs.length - 1) {
+          currentPage = pdfDoc.addPage();
+          yPosition = height - margin;
         }
-      } else {
-        line = testLine;
       }
-    }
-
-    // Draw the last line
-    if (line.trim()) {
-      page.drawText(line.trim(), {
-        x: margin,
-        y: yPosition,
-        size: 12,
-        font: font,
-        color: rgb(0, 0, 0),
-      });
     }
 
     // Generate PDF bytes
