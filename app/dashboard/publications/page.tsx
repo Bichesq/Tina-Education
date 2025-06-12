@@ -91,15 +91,25 @@ async function PublicationsList() {
           No Publications Yet
         </h3>
         <p className="text-gray-400 mb-6">
-          You haven&apos;t published any work yet. Start by creating and
-          submitting your first manuscript.
+          You haven&apos;t published any work yet. Start by creating a new
+          manuscript or adding an existing publication.
         </p>
-        <Link
-          href="/manuscripts/new"
-          className="inline-flex items-center px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium"
-        >
-          Create New Manuscript
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            href="/manuscripts/new"
+            className="inline-flex items-center px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium"
+          >
+            <span className="mr-2">+</span>
+            Create New Manuscript
+          </Link>
+          <Link
+            href="/publications/new"
+            className="inline-flex items-center px-6 py-3 bg-green-700 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+          >
+            <span className="mr-2">📚</span>
+            Add Published Work
+          </Link>
+        </div>
       </div>
     );
   }
@@ -245,13 +255,22 @@ export default function PublicationsPage() {
               Manage and view all your published academic work
             </p>
           </div>
-          <Link
-            href="/manuscripts/new"
-            className="inline-flex items-center px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium"
-          >
-            <span className="mr-2">+</span>
-            New Manuscript
-          </Link>
+          <div className="flex gap-3">
+            <Link
+              href="/manuscripts/new"
+              className="inline-flex items-center px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium"
+            >
+              <span className="mr-2">+</span>
+              New Manuscript
+            </Link>
+            <Link
+              href="/publications/new"
+              className="inline-flex items-center px-6 py-3 bg-green-700 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+            >
+              <span className="mr-2">📚</span>
+              Add Publication
+            </Link>
+          </div>
         </div>
       </div>
 

@@ -10,10 +10,7 @@ export default function Dashboard() {
     <div className="p-8 min-h-full">
       <div className="flex justify-between items-center mb-8">
         <Greeting />
-        <div className="flex gap-4">
-          <button className="px-5 py-2 bg-white text-blue-900 border border-blue-900 rounded">
-            Import Content
-          </button>
+        <div className="flex gap-4">          
           <Link
             href="/manuscripts/new"
             className="px-5 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-colors"
