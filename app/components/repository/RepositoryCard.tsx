@@ -2,6 +2,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { Pub_type } from "@prisma/client";
 
+interface Genre {
+  id: string;
+  name: string;
+  slug: string;
+  parent?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+}
+
 interface Publication {
   id: string;
   title: string;
@@ -12,6 +23,7 @@ interface Publication {
   type: Pub_type;
   createdAt: string;
   updatedAt: string;
+  genre?: Genre;
   user: {
     name: string | null;
     email: string;
@@ -111,10 +123,19 @@ export default function RepositoryCard({ publication }: RepositoryCardProps) {
             {publication.user.name || "Unknown Author"}
           </p>
 
+          {/* Genre */}
+          {publication.genre && (
+            <p className="text-gray-500 text-xs">
+              {publication.genre.parent
+                ? `${publication.genre.parent.name} > `
+                : ""}
+              {publication.genre.name}
+            </p>
+          )}
+
           {/* Price/Status - Using publication date as a substitute */}
           <div className="flex items-center justify-between">
             <span className="text-lg font-bold text-gray-900">Free</span>
-            
           </div>
 
           {/* Format */}

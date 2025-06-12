@@ -8,6 +8,7 @@ interface Filters {
   sortBy: string;
   sortOrder: string;
   page: number;
+  genre?: string;
 }
 
 interface RepositoryFiltersProps {
@@ -38,7 +39,8 @@ export default function RepositoryFilters({
     onFilterChange({
       search: "",
       sortBy: "createdAt",
-      sortOrder: "desc"
+      sortOrder: "desc",
+      genre: "",
     });
   };
 

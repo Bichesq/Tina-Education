@@ -24,6 +24,7 @@ model User {
   review        Review[]
   reviewMessages ReviewMessage[]
   sessions      Session[]
+  wishlistItems WishlistItem[]
 }
 
 model Manuscript {
@@ -101,7 +102,36 @@ model Publication {
   cover     String?
   author_id String
   type      Pub_type @default(EBOOK)
+  genreId   String?
   user      User     @relation(fields: [author_id], references: [id])
+  genre     Genre?   @relation(fields: [genreId], references: [id])
+  wishlistItems WishlistItem[]
+}
+
+model WishlistItem {
+  id            String      @id @default(cuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  userId        String
+  publicationId String
+  selectedType  Pub_type    @default(EBOOK) // The specific type user selected (BOOK, EBOOK, AUDIOBOOK)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, publicationId, selectedType]) // Prevent duplicate entries for same user, publication, and type
+}
+
+model Genre {
+  id           String        @id @default(cuid())
+  name         String
+  slug         String        @unique
+  description  String?
+  parentId     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  parent       Genre?        @relation("GenreHierarchy", fields: [parentId], references: [id])
+  children     Genre[]       @relation("GenreHierarchy")
+  publications Publication[]
 }
 
 model Account {

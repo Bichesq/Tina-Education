@@ -5,6 +5,17 @@ import RepositoryCard from "./RepositoryCard";
 import RepositoryFilters from "./RepositoryFilters";
 import { Pub_type } from "@prisma/client";
 
+interface Genre {
+  id: string;
+  name: string;
+  slug: string;
+  parent?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+}
+
 interface Publication {
   id: string;
   title: string;
@@ -15,6 +26,7 @@ interface Publication {
   type: Pub_type;
   createdAt: string;
   updatedAt: string;
+  genre?: Genre;
   user: {
     name: string | null;
     email: string;
@@ -53,7 +65,8 @@ export default function RepositoryGrid({
     search: "",
     sortBy: "createdAt",
     sortOrder: "desc",
-    page: 1
+    page: 1,
+    genre: "",
   });
 
   const fetchPublications = useCallback(async () => {
@@ -64,8 +77,12 @@ export default function RepositoryGrid({
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
         page: filters.page.toString(),
-        limit: "12"
+        limit: "12",
       });
+
+      if (filters.genre) {
+        params.append("genre", filters.genre);
+      }
 
       const response = await fetch(`${apiEndpoint}?${params}`);
       if (!response.ok) {
@@ -73,9 +90,13 @@ export default function RepositoryGrid({
       }
 
       const data = await response.json();
-      const publicationsKey = apiEndpoint.includes('books') ? 'books' :
-                             apiEndpoint.includes('journals') ? 'journals' :
-                             apiEndpoint.includes('articles') ? 'articles' : 'publications';
+      const publicationsKey = apiEndpoint.includes("books")
+        ? "books"
+        : apiEndpoint.includes("journals")
+          ? "journals"
+          : apiEndpoint.includes("articles")
+            ? "articles"
+            : "publications";
 
       setPublications(data[publicationsKey] || []);
       setPagination(data.pagination);

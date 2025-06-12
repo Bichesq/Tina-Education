@@ -3,13 +3,20 @@ import Link from "next/link";
 import AuthSect from "./authSect";
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 export default function HomeNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session } = useSession();
+  const pathname = usePathname();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  // Check if user is signed in and on home page
+  const isSignedInOnHomePage = session && pathname === "/";
 
   return (
     <header className="fixed top-0 w-full bg-white shadow-md z-50">
@@ -32,11 +39,14 @@ export default function HomeNav() {
           >
             <ul className="flex flex-col md:flex-row items-center">
               <li className="ml-0 md:ml-8">
-                <Link href="/" className="text-gray-800 font-medium">
-                  Home
+                <Link
+                  href={isSignedInOnHomePage ? "/dashboard" : "/"}
+                  className="text-gray-800 font-medium"
+                >
+                  {isSignedInOnHomePage ? "Dashboard" : "Home"}
                 </Link>
               </li>
-              
+
               <li className="ml-0 md:ml-8">
                 <Link href="/books" className="text-gray-800 font-medium">
                   Books
@@ -47,6 +57,20 @@ export default function HomeNav() {
                   Journals
                 </Link>
               </li>
+              {session && (
+                <li className="ml-0 md:ml-8">
+                  <Link href="/wishlist" className="text-gray-800 font-medium">
+                    Wishlist
+                  </Link>
+                </li>
+              )}
+              {session && (
+                <li className="ml-0 md:ml-8">
+                  <Link href="/cart" className="text-gray-800 font-medium">
+                    Cart
+                  </Link>
+                </li>
+              )}
               <li className="ml-0 md:ml-8">
                 <Link href="#" className="text-gray-800 font-medium">
                   Publisher with Us

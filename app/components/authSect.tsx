@@ -1,9 +1,17 @@
 "use client";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { NotificationBell } from "./NotificationBell";
 
 export default function AuthSect() {
   const { data: session } = useSession();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const getCurrentUrl = () => {
+    const params = searchParams.toString();
+    return params ? `${pathname}?${params}` : pathname;
+  };
 
   return (
     <div className="flex justify-center items-center gap-5 relative text-gray-400">
@@ -11,11 +19,10 @@ export default function AuthSect() {
         <>
           <button
             className="px-5 py-2 border border-black rounded text-gray-800 hover:bg-black hover:text-white hover:bg-opacity-10 transition-colors"
-            onClick={() => signIn(undefined, { callbackUrl: "/dashboard" })}
+            onClick={() => signIn(undefined, { callbackUrl: getCurrentUrl() })}
           >
             Sign In
           </button>
-          
         </>
       )}
       {session && (

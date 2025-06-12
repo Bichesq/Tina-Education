@@ -10,6 +10,7 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get("limit") || "12");
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const sortOrder = searchParams.get("sortOrder") || "desc";
+    const genreSlug = searchParams.get("genre");
 
     // Build where clause for books and ebooks
     const where: Prisma.PublicationWhereInput = {
@@ -18,12 +19,19 @@ export async function GET(request: Request) {
       },
     };
 
+    // Add genre filtering
+    if (genreSlug) {
+      where.genre = {
+        OR: [{ slug: genreSlug }, { parent: { slug: genreSlug } }],
+      };
+    }
+
     if (search) {
       where.OR = [
         { title: { contains: search, mode: "insensitive" } },
         { abstract: { contains: search, mode: "insensitive" } },
         { keywords: { contains: search, mode: "insensitive" } },
-        { user: { name: { contains: search, mode: "insensitive" } } }
+        { user: { name: { contains: search, mode: "insensitive" } } },
       ];
     }
 
@@ -36,14 +44,19 @@ export async function GET(request: Request) {
         where,
         include: {
           user: {
-            select: { name: true, email: true }
-          }
+            select: { name: true, email: true },
+          },
+          genre: {
+            include: {
+              parent: true,
+            },
+          },
         },
         orderBy: { [sortBy]: sortOrder },
         skip,
         take: limit,
       }),
-      prisma.publication.count({ where })
+      prisma.publication.count({ where }),
     ]);
 
     // Calculate pagination info
@@ -52,7 +65,7 @@ export async function GET(request: Request) {
     const hasPrevPage = page > 1;
 
     return NextResponse.json({
-      books: books.map(book => ({
+      books: books.map((book) => ({
         ...book,
         createdAt: book.createdAt.toISOString(),
         updatedAt: book.updatedAt.toISOString(),
@@ -63,8 +76,8 @@ export async function GET(request: Request) {
         totalCount,
         hasNextPage,
         hasPrevPage,
-        limit
-      }
+        limit,
+      },
     });
   } catch (error) {
     console.error("Failed to fetch books:", error);

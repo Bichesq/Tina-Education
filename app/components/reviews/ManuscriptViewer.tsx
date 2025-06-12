@@ -11,6 +11,8 @@ interface ManuscriptViewerProps {
     keywords: string;
     type: string;
     pdfFile: string;
+    uploadedFile: string | null;
+    uploadedFileName: string | null;
     user: {
       name: string | null;
       email: string;
@@ -21,12 +23,37 @@ interface ManuscriptViewerProps {
 export default function ManuscriptViewer({
   manuscript,
 }: ManuscriptViewerProps) {
-  const [viewMode, setViewMode] = useState<"content" | "pdf">("content");
+  const [viewMode, setViewMode] = useState<"content" | "pdf" | "uploaded">(
+    "content"
+  );
   const [fontSize, setFontSize] = useState(16);
 
   const handleDownloadPDF = () => {
     if (manuscript.pdfFile) {
       window.open(manuscript.pdfFile, "_blank");
+    }
+  };
+
+  const handleDownloadUploadedFile = () => {
+    if (manuscript.uploadedFile) {
+      window.open(manuscript.uploadedFile, "_blank");
+    }
+  };
+
+  const getFileExtension = (filename: string) => {
+    return filename.split(".").pop()?.toLowerCase() || "";
+  };
+
+  const getFileIcon = (filename: string) => {
+    const ext = getFileExtension(filename);
+    switch (ext) {
+      case "pdf":
+        return "📄";
+      case "doc":
+      case "docx":
+        return "📝";
+      default:
+        return "📎";
     }
   };
 
@@ -38,7 +65,9 @@ export default function ManuscriptViewer({
           <div className="flex bg-white rounded-lg border border-gray-300">
             <button
               onClick={() => setViewMode("content")}
-              className={`px-4 py-2 text-sm font-medium rounded-l-lg ${
+              className={`px-4 py-2 text-sm font-medium ${
+                !manuscript.uploadedFile ? "rounded-lg" : "rounded-l-lg"
+              } ${
                 viewMode === "content"
                   ? "bg-blue-500 text-white"
                   : "text-gray-700 hover:bg-gray-100"
@@ -48,14 +77,28 @@ export default function ManuscriptViewer({
             </button>
             <button
               onClick={() => setViewMode("pdf")}
-              className={`px-4 py-2 text-sm font-medium rounded-r-lg ${
+              className={`px-4 py-2 text-sm font-medium ${
+                !manuscript.uploadedFile ? "rounded-r-lg" : ""
+              } ${
                 viewMode === "pdf"
                   ? "bg-blue-500 text-white"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
             >
-              📋 PDF View
+              📋 Generated PDF
             </button>
+            {manuscript.uploadedFile && (
+              <button
+                onClick={() => setViewMode("uploaded")}
+                className={`px-4 py-2 text-sm font-medium rounded-r-lg ${
+                  viewMode === "uploaded"
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                {getFileIcon(manuscript.uploadedFileName || "")} Uploaded File
+              </button>
+            )}
           </div>
 
           {viewMode === "content" && (
@@ -84,7 +127,16 @@ export default function ManuscriptViewer({
               onClick={handleDownloadPDF}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
             >
-              📥 Download PDF
+              📥 Download Generated PDF
+            </button>
+          )}
+          {manuscript.uploadedFile && (
+            <button
+              onClick={handleDownloadUploadedFile}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm"
+            >
+              {getFileIcon(manuscript.uploadedFileName || "")} Download{" "}
+              {manuscript.uploadedFileName}
             </button>
           )}
         </div>
@@ -128,6 +180,38 @@ export default function ManuscriptViewer({
               </div>
             </div>
 
+            {/* Uploaded File Info */}
+            {manuscript.uploadedFile && (
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                  Uploaded Document
+                </h2>
+                <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <span className="text-2xl">
+                        {getFileIcon(manuscript.uploadedFileName || "")}
+                      </span>
+                      <div>
+                        <p className="font-medium text-gray-900">
+                          {manuscript.uploadedFileName}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Click "Uploaded File" tab above to view this document
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleDownloadUploadedFile}
+                      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
+                    >
+                      📥 Download
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Main Content */}
             <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
@@ -141,18 +225,59 @@ export default function ManuscriptViewer({
               </div>
             </div>
           </div>
-        ) : (
+        ) : viewMode === "pdf" ? (
           <div className="h-full flex items-center justify-center bg-gray-100">
             {manuscript.pdfFile ? (
               <iframe
                 src={manuscript.pdfFile}
                 className="w-full h-full border-0"
-                title={`PDF: ${manuscript.title}`}
+                title={`Generated PDF: ${manuscript.title}`}
               />
             ) : (
               <div className="text-center text-gray-500">
                 <div className="text-6xl mb-4">📄</div>
-                <p className="text-lg">No PDF file available</p>
+                <p className="text-lg">No generated PDF available</p>
+                <p className="text-sm">
+                  Please use the text view to read the manuscript
+                </p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="h-full flex items-center justify-center bg-gray-100">
+            {manuscript.uploadedFile ? (
+              <div className="w-full h-full">
+                {getFileExtension(manuscript.uploadedFileName || "") ===
+                "pdf" ? (
+                  <iframe
+                    src={manuscript.uploadedFile}
+                    className="w-full h-full border-0"
+                    title={`Uploaded PDF: ${manuscript.uploadedFileName}`}
+                  />
+                ) : (
+                  <div className="text-center text-gray-500 p-8">
+                    <div className="text-6xl mb-4">
+                      {getFileIcon(manuscript.uploadedFileName || "")}
+                    </div>
+                    <p className="text-lg mb-2">
+                      {manuscript.uploadedFileName}
+                    </p>
+                    <p className="text-sm mb-4">
+                      This file type cannot be previewed in the browser
+                    </p>
+                    <button
+                      onClick={handleDownloadUploadedFile}
+                      className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      📥 Download to View
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center text-gray-500">
+                <div className="text-6xl mb-4">📎</div>
+                <p className="text-lg">No uploaded file available</p>
                 <p className="text-sm">
                   Please use the text view to read the manuscript
                 </p>

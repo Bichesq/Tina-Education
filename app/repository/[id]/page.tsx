@@ -6,6 +6,8 @@ import { useState, useEffect, use } from "react";
 import { HiOutlineHeart } from "react-icons/hi";
 import { FaHeart } from "react-icons/fa";
 import QuantityCounter from "../../components/quantitycounter";
+import AuthRequiredButton from "../../components/AuthRequiredButton";
+import AuthRequiredLink from "../../components/AuthRequiredLink";
 
 // Sample related books data
 const relatedBooks = [
@@ -319,14 +321,14 @@ export default function PublicationDetailPage({
 
             {/* Action Buttons */}
             <div className="flex gap-4">
-              <Link
+              <AuthRequiredLink
                 href="/cart"
                 className="px-8 py-4 w-60 h-11 text-white justify-center flex items-center text-xl hover:opacity-90 transition-opacity"
                 style={{ backgroundColor: "#0c0a46" }}
               >
                 Add to Cart
-              </Link>
-              <button
+              </AuthRequiredLink>
+              <AuthRequiredButton
                 onClick={handleWishlistToggle}
                 disabled={wishlistLoading}
                 className={`px-3 py-2 w-60 h-11 border border-black flex items-center justify-center gap-6 transition-colors ${
@@ -343,7 +345,7 @@ export default function PublicationDetailPage({
                 <span className="text-xl text-black">
                   {isInWishlist ? "Remove from wishlist" : "Add to wish list"}
                 </span>
-              </button>
+              </AuthRequiredButton>
             </div>
           </div>
         </div>

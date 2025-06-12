@@ -3,15 +3,16 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/prisma";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import GitHub from "next-auth/providers/github";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   secret: process.env.AUTH_SECRET,
   trustHost: true,
+  pages: {
+    signIn: "/auth/signin",
+  },
   providers: [
     Google,
-    GitHub,
     Credentials({
       credentials: {
         username: {
