@@ -38,6 +38,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    async authorized({ auth, request: { nextUrl } }) {
+      // This callback is required for middleware to work properly
+      const isLoggedIn = !!auth?.user;
+      const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
+      const isOnManuscripts = nextUrl.pathname.startsWith("/manuscripts");
+      const isOnReviews = nextUrl.pathname.startsWith("/reviews");
+
+      console.log("🔐 Authorized callback - auth:", auth);
+      console.log("🔐 Authorized callback - isLoggedIn:", isLoggedIn);
+      console.log("🔐 Authorized callback - pathname:", nextUrl.pathname);
+
+      // Allow access to protected routes only if logged in
+      if (isOnDashboard || isOnManuscripts || isOnReviews) {
+        return isLoggedIn;
+      }
+
+      // Allow access to all other routes
+      return true;
+    },
     async session({ session, token }) {
       console.log("🔐 Session callback - session:", session);
       console.log("🔐 Session callback - token:", token);
