@@ -26,6 +26,8 @@ export default function NewPublicationPage() {
     genreId: "",
     cover: "",
   });
+  const [publicationFile, setPublicationFile] = useState<File | null>(null);
+  const [fileError, setFileError] = useState("");
 
   // Fetch genres on component mount
   useEffect(() => {
@@ -75,9 +77,49 @@ export default function NewPublicationPage() {
     );
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setFileError("");
+
+    if (!file) {
+      setPublicationFile(null);
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = [
+      "application/pdf",
+      "application/epub+zip",
+      "application/x-mobipocket-ebook",
+      "text/plain",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      setFileError("Please upload a PDF, EPUB, MOBI, TXT, DOC, or DOCX file");
+      setPublicationFile(null);
+      return;
+    }
+
+    // Validate file size (max 50MB)
+    const maxSize = 50 * 1024 * 1024; // 50MB
+    if (file.size > maxSize) {
+      setFileError("File size must be less than 50MB");
+      setPublicationFile(null);
+      return;
+    }
+
+    setPublicationFile(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -85,15 +127,22 @@ export default function NewPublicationPage() {
     setIsSubmitting(true);
 
     try {
+      // Create FormData for file upload
+      const submitData = new FormData();
+      submitData.append("title", formData.title);
+      submitData.append("abstract", formData.abstract);
+      submitData.append("keywords", formData.keywords);
+      submitData.append("type", formData.type);
+      submitData.append("genreId", formData.genreId || "");
+      submitData.append("cover", formData.cover);
+
+      if (publicationFile) {
+        submitData.append("publicationFile", publicationFile);
+      }
+
       const response = await fetch("/api/publications", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          genreId: formData.genreId || null,
-        }),
+        body: submitData, // Don't set Content-Type header for FormData
       });
 
       if (response.ok) {
@@ -136,7 +185,10 @@ export default function NewPublicationPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title */}
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Title *
               </label>
               <input
@@ -185,7 +237,10 @@ export default function NewPublicationPage() {
 
             {/* Genre */}
             <div>
-              <label htmlFor="genreId" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="genreId"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Genre (Optional)
               </label>
               <select
@@ -198,7 +253,8 @@ export default function NewPublicationPage() {
                 <option value="">Select a genre</option>
                 {genres.map((genre: any) => (
                   <option key={genre.id} value={genre.id}>
-                    {genre.parent ? `${genre.parent.name} > ` : ""}{genre.name}
+                    {genre.parent ? `${genre.parent.name} > ` : ""}
+                    {genre.name}
                   </option>
                 ))}
               </select>
@@ -206,7 +262,10 @@ export default function NewPublicationPage() {
 
             {/* Abstract */}
             <div>
-              <label htmlFor="abstract" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="abstract"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Abstract/Description
               </label>
               <textarea
@@ -222,7 +281,10 @@ export default function NewPublicationPage() {
 
             {/* Keywords */}
             <div>
-              <label htmlFor="keywords" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="keywords"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Keywords
               </label>
               <input
@@ -241,7 +303,10 @@ export default function NewPublicationPage() {
 
             {/* Cover Image URL */}
             <div>
-              <label htmlFor="cover" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="cover"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Cover Image URL (Optional)
               </label>
               <input
@@ -253,6 +318,99 @@ export default function NewPublicationPage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
                 placeholder="https://example.com/cover-image.jpg"
               />
+            </div>
+
+            {/* Publication File Upload */}
+            <div>
+              <label
+                htmlFor="publicationFile"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Publication File (Optional)
+              </label>
+              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
+                <div className="space-y-1 text-center">
+                  <svg
+                    className="mx-auto h-12 w-12 text-gray-400"
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 48 48"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <div className="flex text-sm text-gray-600">
+                    <label
+                      htmlFor="publicationFile"
+                      className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+                    >
+                      <span>Upload a file</span>
+                      <input
+                        id="publicationFile"
+                        name="publicationFile"
+                        type="file"
+                        className="sr-only"
+                        accept=".pdf,.epub,.mobi,.txt,.doc,.docx"
+                        onChange={handleFileChange}
+                      />
+                    </label>
+                    <p className="pl-1">or drag and drop</p>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    PDF, EPUB, MOBI, TXT, DOC, DOCX up to 50MB
+                  </p>
+                </div>
+              </div>
+
+              {/* File info display */}
+              {publicationFile && (
+                <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-md">
+                  <div className="flex items-center">
+                    <svg
+                      className="h-5 w-5 text-green-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="ml-2 text-sm text-green-700">
+                      {publicationFile.name} (
+                      {(publicationFile.size / 1024 / 1024).toFixed(2)} MB)
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* File error display */}
+              {fileError && (
+                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-md">
+                  <div className="flex items-center">
+                    <svg
+                      className="h-5 w-5 text-red-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="ml-2 text-sm text-red-700">
+                      {fileError}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Submit Buttons */}

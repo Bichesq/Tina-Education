@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "../../../prisma";
 import { Pub_type } from "@prisma/client";
+import { put } from "@vercel/blob";
 
 // GET - Get user's publications
 export async function GET() {
@@ -16,19 +17,19 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
       include: {
         user: {
-          select: { name: true, email: true }
+          select: { name: true, email: true },
         },
         genre: {
-          select: { 
-            id: true, 
-            name: true, 
+          select: {
+            id: true,
+            name: true,
             slug: true,
             parent: {
-              select: { id: true, name: true, slug: true }
-            }
-          }
-        }
-      }
+              select: { id: true, name: true, slug: true },
+            },
+          },
+        },
+      },
     });
 
     return NextResponse.json({ publications });
@@ -49,19 +50,29 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await request.json();
-    const { title, abstract, keywords, type, genreId, cover } = body;
+    // Handle FormData for file uploads
+    const formData = await request.formData();
+    const title = formData.get("title") as string;
+    const abstract = formData.get("abstract") as string;
+    const keywords = formData.get("keywords") as string;
+    const type = formData.get("type") as string;
+    const genreId = formData.get("genreId") as string;
+    const cover = formData.get("cover") as string;
+    const publicationFile = formData.get("publicationFile") as File | null;
 
     // Validate required fields
     if (!title?.trim()) {
-      return NextResponse.json(
-        { error: "Title is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Title is required" }, { status: 400 });
     }
 
     // Validate publication type
-    const validTypes: Pub_type[] = ["JOURNAL", "ARTICLE", "BOOK", "EBOOK", "AUDIOBOOK"];
+    const validTypes: Pub_type[] = [
+      "JOURNAL",
+      "ARTICLE",
+      "BOOK",
+      "EBOOK",
+      "AUDIOBOOK",
+    ];
     if (!validTypes.includes(type)) {
       return NextResponse.json(
         { error: "Invalid publication type" },
@@ -70,14 +81,77 @@ export async function POST(request: Request) {
     }
 
     // Validate genre if provided
-    if (genreId) {
+    if (genreId && genreId.trim()) {
       const genreExists = await prisma.genre.findUnique({
-        where: { id: genreId }
+        where: { id: genreId },
       });
       if (!genreExists) {
         return NextResponse.json(
           { error: "Invalid genre selected" },
           { status: 400 }
+        );
+      }
+    }
+
+    // Handle file upload if provided
+    let fileUrl: string | null = null;
+    let fileName: string | null = null;
+
+    if (publicationFile && publicationFile.size > 0) {
+      // Validate file type
+      const allowedTypes = [
+        "application/pdf",
+        "application/epub+zip",
+        "application/x-mobipocket-ebook",
+        "text/plain",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ];
+
+      if (!allowedTypes.includes(publicationFile.type)) {
+        return NextResponse.json(
+          {
+            error:
+              "Invalid file type. Please upload PDF, EPUB, MOBI, TXT, DOC, or DOCX files only.",
+          },
+          { status: 400 }
+        );
+      }
+
+      // Validate file size (50MB limit)
+      const maxSize = 50 * 1024 * 1024; // 50MB
+      if (publicationFile.size > maxSize) {
+        return NextResponse.json(
+          { error: "File size too large. Maximum size is 50MB." },
+          { status: 400 }
+        );
+      }
+
+      // Generate unique filename
+      const timestamp = Date.now();
+      const randomString = Math.random().toString(36).substring(7);
+      const fileExtension = publicationFile.name.split(".").pop();
+      const uniqueFilename = `publication-${timestamp}-${randomString}.${fileExtension}`;
+
+      try {
+        // Upload to Vercel Blob
+        const blob = await put(
+          `publications/${uniqueFilename}`,
+          publicationFile,
+          {
+            access: "public",
+            contentType: publicationFile.type,
+          }
+        );
+
+        fileUrl = blob.url;
+        fileName = publicationFile.name;
+        console.log(`✅ Publication file uploaded successfully: ${blob.url}`);
+      } catch (uploadError) {
+        console.error("❌ File upload failed:", uploadError);
+        return NextResponse.json(
+          { error: "Failed to upload file" },
+          { status: 500 }
         );
       }
     }
@@ -89,32 +163,36 @@ export async function POST(request: Request) {
         abstract: abstract?.trim() || null,
         keywords: keywords?.trim() || null,
         type: type as Pub_type,
-        genreId: genreId || null,
+        genreId: (genreId && genreId.trim()) || null,
         cover: cover?.trim() || null,
+        fileUrl: fileUrl,
+        fileName: fileName,
         author_id: session.user.id,
       },
       include: {
         user: {
-          select: { name: true, email: true }
+          select: { name: true, email: true },
         },
         genre: {
-          select: { 
-            id: true, 
-            name: true, 
+          select: {
+            id: true,
+            name: true,
             slug: true,
             parent: {
-              select: { id: true, name: true, slug: true }
-            }
-          }
-        }
-      }
+              select: { id: true, name: true, slug: true },
+            },
+          },
+        },
+      },
     });
 
-    return NextResponse.json({ 
-      message: "Publication created successfully",
-      publication 
-    }, { status: 201 });
-
+    return NextResponse.json(
+      {
+        message: "Publication created successfully",
+        publication,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Failed to create publication:", error);
     return NextResponse.json(

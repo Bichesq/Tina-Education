@@ -100,6 +100,8 @@ model Publication {
   content   String?
   keywords  String?
   cover     String?
+  fileUrl   String?  // URL to the uploaded publication file
+  fileName  String?  // Original filename of the uploaded file
   author_id String
   type      Pub_type @default(EBOOK)
   genreId   String?
