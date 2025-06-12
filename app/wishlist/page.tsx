@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { HiOutlineTrash, HiOutlineShoppingCart } from "react-icons/hi";
 import { FaHeart } from "react-icons/fa";
 
@@ -25,11 +26,21 @@ interface WishlistItem {
 }
 
 export default function WishlistPage() {
+  const { data: session, status } = useSession();
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchWishlist() {
+      // Wait for session to load
+      if (status === "loading") return;
+
+      // If not authenticated, stop loading
+      if (!session?.user?.id) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await fetch("/api/wishlist");
         if (response.ok) {
@@ -44,18 +55,25 @@ export default function WishlistPage() {
     }
 
     fetchWishlist();
-  }, []);
+  }, [session, status]);
 
-  const removeFromWishlist = async (publicationId: string, selectedType: string) => {
+  const removeFromWishlist = async (
+    publicationId: string,
+    selectedType: string
+  ) => {
     try {
       const response = await fetch(
         `/api/wishlist?publicationId=${publicationId}&selectedType=${selectedType}`,
         { method: "DELETE" }
       );
       if (response.ok) {
-        setWishlistItems(items =>
-          items.filter(item => 
-            !(item.publication.id === publicationId && item.selectedType === selectedType)
+        setWishlistItems((items) =>
+          items.filter(
+            (item) =>
+              !(
+                item.publication.id === publicationId &&
+                item.selectedType === selectedType
+              )
           )
         );
       }
@@ -66,19 +84,87 @@ export default function WishlistPage() {
 
   const getTypeLabel = (type: string) => {
     switch (type) {
-      case "BOOK": return "Printed Copy";
-      case "EBOOK": return "eBook";
-      case "AUDIOBOOK": return "Audio book";
-      case "JOURNAL": return "Journal";
-      case "ARTICLE": return "Article";
-      default: return type;
+      case "BOOK":
+        return "Printed Copy";
+      case "EBOOK":
+        return "eBook";
+      case "AUDIOBOOK":
+        return "Audio book";
+      case "JOURNAL":
+        return "Journal";
+      case "ARTICLE":
+        return "Article";
+      default:
+        return type;
     }
   };
 
-  if (loading) {
+  if (loading || status === "loading") {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show sign-in prompt if not authenticated
+  if (!session?.user?.id) {
+    return (
+      <div className="min-h-screen bg-white mt-18">
+        {/* Sub-menu Section */}
+        <div
+          className="w-full h-18 flex items-center justify-center"
+          style={{ backgroundColor: "#f0eded" }}
+        >
+          <nav className="flex space-x-8">
+            <Link href="/books" className="text-black text-xl hover:underline">
+              Books
+            </Link>
+            <Link
+              href="/authors"
+              className="text-black text-xl hover:underline"
+            >
+              Authors
+            </Link>
+            <Link
+              href="/journals"
+              className="text-black text-xl hover:underline"
+            >
+              Journals
+            </Link>
+          </nav>
+        </div>
+
+        {/* Breadcrumb Section */}
+        <div className="px-10 py-4 border-b border-blue-500">
+          <nav className="text-s text-black">
+            <Link href="/" className="hover:underline">
+              Home
+            </Link>
+            <span className="mx-2">/</span>
+            <span>Wishlist</span>
+          </nav>
+        </div>
+
+        {/* Sign-in prompt */}
+        <div className="px-10 py-10">
+          <div className="text-center py-16">
+            <div className="text-6xl mb-4">🔒</div>
+            <h2 className="text-2xl font-bold text-black mb-4">
+              Sign in to view your wishlist
+            </h2>
+            <p className="text-gray-700 mb-8">
+              You need to be signed in to access your wishlist.
+            </p>
+            <Link
+              href="/auth/signin?callbackUrl=/wishlist"
+              className="px-8 py-3 text-white rounded-lg hover:opacity-90 transition-opacity"
+              style={{ backgroundColor: "#0c0a46" }}
+            >
+              Sign In
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
@@ -119,14 +205,20 @@ export default function WishlistPage() {
         <div className="flex items-center gap-3 mb-8">
           <FaHeart className="text-red-500 text-3xl" />
           <h1 className="text-3xl font-bold text-black">My Wishlist</h1>
-          <span className="text-gray-600 text-xl">({wishlistItems.length} items)</span>
+          <span className="text-gray-600 text-xl">
+            ({wishlistItems.length} items)
+          </span>
         </div>
 
         {wishlistItems.length === 0 ? (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">💝</div>
-            <h2 className="text-2xl font-bold text-black mb-4">Your wishlist is empty</h2>
-            <p className="text-gray-700 mb-8">Save books you're interested in for later!</p>
+            <h2 className="text-2xl font-bold text-black mb-4">
+              Your wishlist is empty
+            </h2>
+            <p className="text-gray-700 mb-8">
+              Save books you're interested in for later!
+            </p>
             <Link
               href="/books"
               className="px-8 py-3 text-white rounded-lg hover:opacity-90 transition-opacity"
@@ -138,7 +230,10 @@ export default function WishlistPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {wishlistItems.map((item) => (
-              <div key={item.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div
+                key={item.id}
+                className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+              >
                 {/* Book Cover */}
                 <div className="w-full aspect-[3/4] mb-4">
                   {item.publication.cover ? (
@@ -159,24 +254,24 @@ export default function WishlistPage() {
                 {/* Book Details */}
                 <div className="space-y-2">
                   <h3 className="text-lg font-bold text-black line-clamp-2">
-                    <Link 
-                      href={`/repository/${item.publication.id}`} 
+                    <Link
+                      href={`/repository/${item.publication.id}`}
                       className="hover:underline"
                     >
                       {item.publication.title}
                     </Link>
                   </h3>
-                  
+
                   <p className="text-gray-700 text-sm">
                     By {item.publication.user.name}
                   </p>
-                  
+
                   {item.publication.genre && (
                     <p className="text-gray-600 text-xs">
                       {item.publication.genre.name}
                     </p>
                   )}
-                  
+
                   <div className="flex items-center gap-2">
                     <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
                       {getTypeLabel(item.selectedType)}
@@ -200,9 +295,11 @@ export default function WishlistPage() {
                     <HiOutlineShoppingCart className="inline mr-1" />
                     View Details
                   </Link>
-                  
+
                   <button
-                    onClick={() => removeFromWishlist(item.publication.id, item.selectedType)}
+                    onClick={() =>
+                      removeFromWishlist(item.publication.id, item.selectedType)
+                    }
                     className="px-3 py-2 text-red-500 border border-red-300 rounded hover:bg-red-50 transition-colors"
                     title="Remove from wishlist"
                   >

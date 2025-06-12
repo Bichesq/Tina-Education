@@ -1,5 +1,3 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import Sidebar from "../components/dashboard/Sidebar";
 
 export default async function DashboardLayout({
@@ -7,10 +5,7 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-  if (!session) {
-    redirect("/");
-  }
+  // Authentication is handled by middleware
 
   return (
     <div className="bg-gray-100 pt-20">

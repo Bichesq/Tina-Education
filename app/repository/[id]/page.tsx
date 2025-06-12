@@ -323,7 +323,7 @@ export default function PublicationDetailPage({
             <div className="flex gap-4">
               <AuthRequiredLink
                 href="/cart"
-                className="px-8 py-4 w-60 h-11 text-white justify-center flex items-center text-xl hover:opacity-90 transition-opacity"
+                className="px-8 py-4 w-70 h-11 text-white justify-center flex items-center text-xl hover:opacity-90 transition-opacity"
                 style={{ backgroundColor: "#0c0a46" }}
               >
                 Add to Cart
@@ -331,7 +331,7 @@ export default function PublicationDetailPage({
               <AuthRequiredButton
                 onClick={handleWishlistToggle}
                 disabled={wishlistLoading}
-                className={`px-3 py-2 w-60 h-11 border border-black flex items-center justify-center gap-6 transition-colors ${
+                className={`px-3 py-2 w-70 h-11 border border-blue-300 flex items-center justify-center gap-6 transition-colors ${
                   wishlistLoading
                     ? "bg-gray-200 cursor-not-allowed"
                     : "bg-gray-300 hover:bg-gray-400"
