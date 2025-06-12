@@ -51,6 +51,7 @@ export async function POST(request: Request) {
     }
 
     // Handle FormData for file uploads
+    console.log("📝 Processing publication creation request...");
     const formData = await request.formData();
     const title = formData.get("title") as string;
     const abstract = formData.get("abstract") as string;
@@ -59,6 +60,17 @@ export async function POST(request: Request) {
     const genreId = formData.get("genreId") as string;
     const cover = formData.get("cover") as string;
     const publicationFile = formData.get("publicationFile") as File | null;
+
+    console.log("📝 Form data received:", {
+      title,
+      abstract: abstract?.substring(0, 50) + "...",
+      keywords,
+      type,
+      genreId,
+      cover,
+      hasFile: !!publicationFile,
+      fileSize: publicationFile?.size || 0,
+    });
 
     // Validate required fields
     if (!title?.trim()) {
@@ -73,7 +85,7 @@ export async function POST(request: Request) {
       "EBOOK",
       "AUDIOBOOK",
     ];
-    if (!validTypes.includes(type)) {
+    if (!validTypes.includes(type as Pub_type)) {
       return NextResponse.json(
         { error: "Invalid publication type" },
         { status: 400 }
@@ -194,9 +206,17 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Failed to create publication:", error);
+    console.error("❌ Failed to create publication:", error);
+    console.error("❌ Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : "No stack trace",
+      name: error instanceof Error ? error.name : "Unknown error type",
+    });
     return NextResponse.json(
-      { error: "Failed to create publication" },
+      {
+        error: "Failed to create publication",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }
