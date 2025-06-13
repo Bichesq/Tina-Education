@@ -20,7 +20,7 @@ function SignInContent() {
   > | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [credentials, setCredentials] = useState({
-    username: "",
+    email: "",
     password: "",
   });
 
@@ -38,7 +38,7 @@ function SignInContent() {
 
     try {
       await signIn("credentials", {
-        username: credentials.username,
+        email: credentials.email,
         password: credentials.password,
         callbackUrl,
       });
@@ -79,23 +79,23 @@ function SignInContent() {
           <form className="space-y-6" onSubmit={handleCredentialsSignIn}>
             <div>
               <label
-                htmlFor="username"
+                htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Username
+                Email Address
               </label>
               <div className="mt-1">
                 <input
-                  id="username"
-                  name="username"
-                  type="text"
+                  id="email"
+                  name="email"
+                  type="email"
                   required
-                  value={credentials.username}
+                  value={credentials.email}
                   onChange={(e) =>
-                    setCredentials({ ...credentials, username: e.target.value })
+                    setCredentials({ ...credentials, email: e.target.value })
                   }
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Enter your username"
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 text-gray-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  placeholder="Enter your email address"
                 />
               </div>
             </div>
@@ -178,6 +178,29 @@ function SignInContent() {
               </button>
             </div>
           )}
+
+          {/* Sign up link */}
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  Don't have an account?
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6 text-center">
+              <Link
+                href="/auth/signup"
+                className="text-blue-600 hover:text-blue-500 font-medium"
+              >
+                Create a new account
+              </Link>
+            </div>
+          </div>
 
           {/* Back to home link */}
           <div className="mt-6 text-center">

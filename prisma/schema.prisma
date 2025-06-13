@@ -14,8 +14,15 @@ model User {
   updatedAt     DateTime        @updatedAt
   image         String?
   emailVerified DateTime?
-  role          Role            @default(REVIEWER)
+  role          Role            @default(USER)
   name          String?
+  password      String?         // For credentials authentication
+  bio           String?         // User biography
+  affiliation   String?         // Institution/organization
+  expertise     String?         // Areas of expertise
+  phone         String?         // Phone number
+  website       String?         // Personal/professional website
+  orcid         String?         // ORCID identifier
   accounts      Account[]
   Authenticator Authenticator[]
   manuscripts   Manuscript[]
@@ -25,6 +32,7 @@ model User {
   reviewMessages ReviewMessage[]
   sessions      Session[]
   wishlistItems WishlistItem[]
+  reviewerApplications ReviewerApplication[]
 }
 
 model Manuscript {
@@ -199,6 +207,30 @@ model Notification {
   User      User     @relation(fields: [userId], references: [id])
 }
 
+model ReviewerApplication {
+  id                String                    @id @default(cuid())
+  userId            String
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+  status            ReviewerApplicationStatus @default(PENDING)
+
+  // Application details
+  motivation        String                    // Why they want to be a reviewer
+  expertise         String                    // Areas of expertise
+  experience        String                    // Previous review experience
+  qualifications    String                    // Academic/professional qualifications
+  availability      String                    // Time availability for reviews
+
+  // Admin review
+  adminNotes        String?                   // Admin comments
+  reviewedBy        String?                   // Admin who reviewed the application
+  reviewedAt        DateTime?                 // When the application was reviewed
+
+  user              User                      @relation(fields: [userId], references: [id])
+
+  @@unique([userId]) // One application per user
+}
+
 enum ManuscriptStatus {
   DRAFT
   SUBMITTED
@@ -232,6 +264,13 @@ enum Role {
   USER
   ADMIN
   REVIEWER
+}
+
+enum ReviewerApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  UNDER_REVIEW
 }
 
 enum Pub_type {

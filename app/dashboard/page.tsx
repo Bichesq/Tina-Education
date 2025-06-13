@@ -1,16 +1,22 @@
 import Link from "next/link";
-import Greeting from "../components/greeting";
+import { auth } from "@/auth";
 import DashboardStats from "../components/dashboard/DashboardStats";
 import RecentManuscripts from "../components/dashboard/RecentManuscripts";
 import RecentActivities from "../components/dashboard/RecentActivities";
 import { Suspense } from "react";
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const session = await auth();
+
   return (
     <div className="p-8 min-h-full">
       <div className="flex justify-between items-center mb-8">
-        <Greeting />
-        <div className="flex gap-4">          
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">
+            Welcome back {session?.user?.name || "User"}
+          </h1>
+        </div>
+        <div className="flex gap-4">
           <Link
             href="/manuscripts/new"
             className="px-5 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-colors"

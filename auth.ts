@@ -3,11 +3,15 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/prisma";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
+import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   secret: process.env.AUTH_SECRET,
   trustHost: true,
+  session: {
+    strategy: "jwt", // Use JWT for credentials provider
+  },
   pages: {
     signIn: "/auth/signin",
   },
@@ -15,23 +19,57 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Google,
     Credentials({
       credentials: {
-        username: {
-          label: "Username",
-          type: "text",
-          placeholder: "Enter UserName",
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "Enter your email",
         },
         password: {
           label: "Password",
           type: "password",
-          placeholder: "Enter Password",
+          placeholder: "Enter your password",
         },
       },
       async authorize(credentials) {
-        const { username, password } = credentials;
-        const user = { id: "1", name: "Bichesq", email: "bichesq@gmail.com" };
-        if (username === user.name && password === "nextgmail.com") {
-          return user;
-        } else {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        try {
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email as string },
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              image: true,
+              password: true,
+              role: true,
+            },
+          });
+
+          if (!user || !user.password) {
+            return null;
+          }
+
+          const isPasswordValid = await bcrypt.compare(
+            credentials.password as string,
+            user.password
+          );
+
+          if (!isPasswordValid) {
+            return null;
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            image: user.image,
+            role: user.role,
+          };
+        } catch (error) {
+          console.error("Authentication error:", error);
           return null;
         }
       },
@@ -60,30 +98,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       console.log("🔐 Session callback - session:", session);
       console.log("🔐 Session callback - token:", token);
+
       if (token?.sub) {
         session.user.id = token.sub;
-
-        // Fetch user role from database
-        try {
-          const user = await prisma.user.findUnique({
-            where: { id: token.sub },
-            select: { role: true },
-          });
-          if (user) {
-            session.user.role = user.role;
-          }
-        } catch (error) {
-          console.error("Failed to fetch user role:", error);
-        }
+        if (token.name) session.user.name = token.name;
+        if (token.email) session.user.email = token.email;
+        if (token.picture) session.user.image = token.picture;
+        if (token.role) session.user.role = token.role as any;
       }
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       console.log("🔐 JWT callback - token:", token);
       console.log("🔐 JWT callback - user:", user);
+      console.log("🔐 JWT callback - account:", account);
+
+      // For credentials provider, store user data in token
       if (user) {
         token.sub = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        token.picture = user.image;
+        token.role = user.role;
       }
+
       return token;
     },
   },

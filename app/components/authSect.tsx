@@ -2,6 +2,7 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { NotificationBell } from "./NotificationBell";
+import UserDropdown from "./UserDropdown";
 
 export default function AuthSect() {
   const { data: session } = useSession();
@@ -28,15 +29,7 @@ export default function AuthSect() {
       {session && (
         <>
           <NotificationBell />
-          <span className="text-gray-800 font-medium">
-            {session.user?.name}
-          </span>
-          <button
-            className="px-5 py-2 border border-white rounded bg-blue-900 text-white hover:bg-black"
-            onClick={() => signOut({ callbackUrl: "/" })}
-          >
-            Sign out
-          </button>
+          <UserDropdown user={session.user} />
         </>
       )}
     </div>
