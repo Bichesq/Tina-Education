@@ -94,29 +94,44 @@ export default function ReviewerApplicationForm({ user }: ReviewerApplicationFor
 
       {/* User Information Display */}
       <div className="bg-gray-50 rounded-lg p-4">
-        <h3 className="text-lg font-medium text-gray-900 mb-3">Your Information</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-3">
+          Your Information
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
             <span className="font-medium text-gray-700">Name:</span>
-            <span className="ml-2 text-gray-600">{user.name || "Not provided"}</span>
+            <span className="ml-2 text-gray-600">
+              {user.name || "Not provided"}
+            </span>
           </div>
           <div>
             <span className="font-medium text-gray-700">Email:</span>
             <span className="ml-2 text-gray-600">{user.email}</span>
           </div>
           <div className="md:col-span-2">
-            <span className="font-medium text-gray-700">Current Affiliation:</span>
-            <span className="ml-2 text-gray-600">{user.affiliation || "Not provided"}</span>
+            <span className="font-medium text-gray-700">
+              Current Affiliation:
+            </span>
+            <span className="ml-2 text-gray-600">
+              {user.affiliation || "Not provided"}
+            </span>
           </div>
         </div>
         <p className="text-xs text-gray-500 mt-2">
-          You can update this information in your <a href="/profile" className="text-blue-600 hover:text-blue-500">profile page</a>.
+          You can update this information in your{" "}
+          <a href="/profile" className="text-blue-600 hover:text-blue-500">
+            profile page
+          </a>
+          .
         </p>
       </div>
 
       {/* Motivation */}
       <div>
-        <label htmlFor="motivation" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="motivation"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Motivation for Becoming a Reviewer *
         </label>
         <textarea
@@ -130,13 +145,17 @@ export default function ReviewerApplicationForm({ user }: ReviewerApplicationFor
           placeholder="Explain why you want to become a reviewer and how you can contribute to the peer review process..."
         />
         <p className="mt-1 text-xs text-gray-500">
-          Describe your motivation and commitment to peer review (minimum 100 characters)
+          Describe your motivation and commitment to peer review (minimum 100
+          characters)
         </p>
       </div>
 
       {/* Areas of Expertise */}
       <div>
-        <label htmlFor="expertise" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="expertise"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Areas of Expertise *
         </label>
         <textarea
@@ -156,7 +175,10 @@ export default function ReviewerApplicationForm({ user }: ReviewerApplicationFor
 
       {/* Review Experience */}
       <div>
-        <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="experience"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Previous Review Experience
         </label>
         <textarea
@@ -169,13 +191,17 @@ export default function ReviewerApplicationForm({ user }: ReviewerApplicationFor
           placeholder="Describe any previous experience with peer review, including journals you've reviewed for, number of reviews completed, etc. If you're new to reviewing, mention any relevant experience..."
         />
         <p className="mt-1 text-xs text-gray-500">
-          Include any relevant experience, even if you're new to formal peer review
+          Include any relevant experience, even if you&apos;re new to formal
+          peer review
         </p>
       </div>
 
       {/* Qualifications */}
       <div>
-        <label htmlFor="qualifications" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="qualifications"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Academic and Professional Qualifications *
         </label>
         <textarea
@@ -189,13 +215,17 @@ export default function ReviewerApplicationForm({ user }: ReviewerApplicationFor
           placeholder="List your degrees, certifications, publications, professional positions, and other relevant qualifications..."
         />
         <p className="mt-1 text-xs text-gray-500">
-          Include degrees, publications, professional experience, and other relevant credentials
+          Include degrees, publications, professional experience, and other
+          relevant credentials
         </p>
       </div>
 
       {/* Availability */}
       <div>
-        <label htmlFor="availability" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="availability"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Availability and Commitment
         </label>
         <textarea
@@ -214,7 +244,9 @@ export default function ReviewerApplicationForm({ user }: ReviewerApplicationFor
 
       {/* Terms and Conditions */}
       <div className="bg-gray-50 rounded-lg p-4">
-        <h4 className="text-sm font-medium text-gray-900 mb-2">Reviewer Commitments</h4>
+        <h4 className="text-sm font-medium text-gray-900 mb-2">
+          Reviewer Commitments
+        </h4>
         <div className="space-y-2 text-sm text-gray-700">
           <label className="flex items-start">
             <input
@@ -222,7 +254,9 @@ export default function ReviewerApplicationForm({ user }: ReviewerApplicationFor
               required
               className="mt-1 mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
-            <span>I commit to providing timely, thorough, and constructive reviews</span>
+            <span>
+              I commit to providing timely, thorough, and constructive reviews
+            </span>
           </label>
           <label className="flex items-start">
             <input
@@ -230,7 +264,9 @@ export default function ReviewerApplicationForm({ user }: ReviewerApplicationFor
               required
               className="mt-1 mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
-            <span>I will maintain confidentiality of all manuscripts under review</span>
+            <span>
+              I will maintain confidentiality of all manuscripts under review
+            </span>
           </label>
           <label className="flex items-start">
             <input
@@ -238,7 +274,10 @@ export default function ReviewerApplicationForm({ user }: ReviewerApplicationFor
               required
               className="mt-1 mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
-            <span>I will declare any conflicts of interest and recuse myself when appropriate</span>
+            <span>
+              I will declare any conflicts of interest and recuse myself when
+              appropriate
+            </span>
           </label>
           <label className="flex items-start">
             <input
@@ -246,7 +285,10 @@ export default function ReviewerApplicationForm({ user }: ReviewerApplicationFor
               required
               className="mt-1 mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
-            <span>I understand that reviewer assignments are at the discretion of the editorial team</span>
+            <span>
+              I understand that reviewer assignments are at the discretion of
+              the editorial team
+            </span>
           </label>
         </div>
       </div>

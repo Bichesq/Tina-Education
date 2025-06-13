@@ -42,7 +42,13 @@ function getStatusInfo(manuscript: ManuscriptWithReviews) {
     (r) => r.status === "REVIEW_SUBMITTED"
   ).length;
 
-  if (manuscript.status === "ACCEPTED") {
+  if (manuscript.status === "DRAFT") {
+    return {
+      label: "Draft",
+      color: "bg-gray-100 text-gray-600",
+      info: "Not submitted for review",
+    };
+  } else if (manuscript.status === "ACCEPTED") {
     return {
       label: "Accepted",
       color: "bg-green-100 text-green-600",
@@ -54,20 +60,26 @@ function getStatusInfo(manuscript: ManuscriptWithReviews) {
       color: "bg-blue-100 text-blue-600",
       info: `${pendingReviews} reviews pending`,
     };
+  } else if (manuscript.status === "SUBMITTED") {
+    return {
+      label: "Submitted",
+      color: "bg-yellow-100 text-yellow-600",
+      info: "Submitted for review",
+    };
   } else {
     return {
-      label: "Draft",
-      color: "bg-amber-100 text-amber-600",
-      info: "Not submitted for review",
+      label: "Unknown",
+      color: "bg-gray-100 text-gray-600",
+      info: "Status unknown",
     };
   }
 }
 
 function formatDate(date: Date) {
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
   }).format(date);
 }
 
@@ -149,12 +161,14 @@ export default async function RecentManuscripts() {
                     >
                       Edit
                     </Link>
-                    <Link
-                      href={`/manuscripts/${manuscript.id}`}
-                      className="text-blue-900 font-medium text-sm hover:underline"
-                    >
-                      View Details
-                    </Link>
+                    {manuscript.status !== "DRAFT" && (
+                      <Link
+                        href={`/manuscripts/${manuscript.id}`}
+                        className="text-blue-900 font-medium text-sm hover:underline"
+                      >
+                        View Details
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

@@ -304,12 +304,14 @@ async function ManuscriptsList() {
                 >
                   Edit
                 </Link>
-                <Link
-                  href={`/manuscripts/${manuscript.id}`}
-                  className="text-blue-900 hover:text-blue-700 font-medium text-sm"
-                >
-                  View Details
-                </Link>
+                {manuscript.status !== "DRAFT" && (
+                  <Link
+                    href={`/manuscripts/${manuscript.id}`}
+                    className="text-blue-900 hover:text-blue-700 font-medium text-sm"
+                  >
+                    View Details
+                  </Link>
+                )}
                 {manuscript.status === "DRAFT" && (
                   <Link
                     href={`/manuscripts/${manuscript.id}/submit`}

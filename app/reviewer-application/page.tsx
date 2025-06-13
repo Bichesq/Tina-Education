@@ -119,8 +119,9 @@ export default async function ReviewerApplicationPage() {
             Apply to Become a Reviewer
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Join our community of expert reviewers and help maintain the quality of academic publications. 
-            Your expertise and insights are valuable to the scholarly community.
+            Join our community of expert reviewers and help maintain the quality
+            of academic publications. Your expertise and insights are valuable
+            to the scholarly community.
           </p>
         </div>
 
@@ -132,7 +133,9 @@ export default async function ReviewerApplicationPage() {
           <ul className="space-y-2 text-blue-800">
             <li className="flex items-start">
               <span className="mr-2">•</span>
-              <span>Advanced degree (Master's or PhD) in relevant field</span>
+              <span>
+                Advanced degree (Master&apos;s or PhD) in relevant field
+              </span>
             </li>
             <li className="flex items-start">
               <span className="mr-2">•</span>
@@ -160,10 +163,11 @@ export default async function ReviewerApplicationPage() {
               Application Form
             </h2>
             <p className="text-gray-600 mt-1">
-              Please provide detailed information about your qualifications and experience
+              Please provide detailed information about your qualifications and
+              experience
             </p>
           </div>
-          
+
           <div className="p-6">
             <ReviewerApplicationForm user={user} />
           </div>
@@ -177,19 +181,28 @@ export default async function ReviewerApplicationPage() {
           <div className="space-y-3 text-gray-700">
             <div className="flex items-start">
               <span className="mr-3 text-blue-600">1.</span>
-              <span>Your application will be reviewed by our administrative team</span>
+              <span>
+                Your application will be reviewed by our administrative team
+              </span>
             </div>
             <div className="flex items-start">
               <span className="mr-3 text-blue-600">2.</span>
-              <span>We may contact you for additional information or clarification</span>
+              <span>
+                We may contact you for additional information or clarification
+              </span>
             </div>
             <div className="flex items-start">
               <span className="mr-3 text-blue-600">3.</span>
-              <span>You will receive an email notification about the decision</span>
+              <span>
+                You will receive an email notification about the decision
+              </span>
             </div>
             <div className="flex items-start">
               <span className="mr-3 text-blue-600">4.</span>
-              <span>If approved, you will be granted reviewer access and receive training materials</span>
+              <span>
+                If approved, you will be granted reviewer access and receive
+                training materials
+              </span>
             </div>
           </div>
         </div>

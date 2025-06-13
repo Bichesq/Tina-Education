@@ -37,7 +37,7 @@ export default async function AdminDashboard() {
             Access Denied
           </h3>
           <p className="text-gray-500 mb-6">
-            You don't have permission to access the admin dashboard.
+            You don&apos;t have permission to access the admin dashboard.
           </p>
           <a
             href="/dashboard"

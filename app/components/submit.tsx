@@ -33,7 +33,7 @@ export default function Submit() {
   }
 
   // Submit handler
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent, isDraft = false) => {
     e.preventDefault();
     setSubmitting(true);
     setError("");
@@ -49,17 +49,38 @@ export default function Submit() {
           keywords,
           uploadedFile: uploadedFile?.url,
           uploadedFileName: uploadedFile?.name,
+          isDraft,
         }),
       });
-      if (!res.ok) throw new Error("Submission failed");
-      setSuccess("Manuscript submitted successfully!");
+      if (!res.ok)
+        throw new Error(isDraft ? "Failed to save draft" : "Submission failed");
+
+      setSuccess(
+        isDraft
+          ? "Draft saved successfully!"
+          : "Manuscript submitted successfully!"
+      );
+
+      if (!isDraft) {
+        // Redirect to manuscripts page after successful submission
+        setTimeout(() => {
+          window.location.href = "/dashboard/manuscripts";
+        }, 1500);
+      }
+
       setTitle("");
       setAbstract("");
       setContent("");
       setKeywords("");
       setUploadedFile(null);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Submission error");
+      setError(
+        err instanceof Error
+          ? err.message
+          : isDraft
+            ? "Failed to save draft"
+            : "Submission error"
+      );
     } finally {
       setSubmitting(false);
     }
@@ -134,13 +155,24 @@ export default function Submit() {
       </>
     ),
     submit: () => (
-      <button
-        type="submit"
-        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        disabled={submitting}
-      >
-        {submitting ? "Submitting..." : "Submit Manuscript"}
-      </button>
+      <div className="flex space-x-3">
+        <button
+          type="button"
+          onClick={(e) => handleSubmit(e, true)}
+          disabled={submitting}
+          className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+        >
+          {submitting ? "Saving..." : "Save as Draft"}
+        </button>
+        <button
+          type="submit"
+          onClick={(e) => handleSubmit(e, false)}
+          disabled={submitting}
+          className="bg-blue-900 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+        >
+          {submitting ? "Submitting..." : "Submit Manuscript"}
+        </button>
+      </div>
     ),
   };
 
@@ -158,7 +190,7 @@ export default function Submit() {
           className="mb-4"
           id="manuscriptForm"
           method="POST"
-          onSubmit={handleSubmit}
+          onSubmit={(e) => handleSubmit(e, false)}
         >
           {form.hidden_tag()}
           <h1 className="text-center text-2xl font-bold text-gray-800 mb-6">

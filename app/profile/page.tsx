@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { prisma } from "../../prisma";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import ProfileForm from "../components/profile/ProfileForm";
 import Image from "next/image";
 
@@ -80,7 +81,9 @@ export default async function ProfilePage() {
               <div className="flex items-center space-x-4 text-sm text-gray-500">
                 <span className="capitalize">{user.role.toLowerCase()}</span>
                 <span>•</span>
-                <span>Member since {new Date(user.createdAt).toLocaleDateString()}</span>
+                <span>
+                  Member since {new Date(user.createdAt).toLocaleDateString()}
+                </span>
               </div>
             </div>
           </div>
@@ -96,7 +99,7 @@ export default async function ProfilePage() {
               Update your personal information and profile details
             </p>
           </div>
-          
+
           <div className="p-6">
             <ProfileForm user={user} />
           </div>
@@ -151,12 +154,12 @@ export default async function ProfilePage() {
               >
                 📊 Go to Dashboard
               </a>
-              <a
+              <Link
                 href="/manuscripts"
                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md border border-gray-200"
               >
                 📝 My Manuscripts
-              </a>
+              </Link>
               {user.role === "REVIEWER" && (
                 <a
                   href="/dashboard/reviews"

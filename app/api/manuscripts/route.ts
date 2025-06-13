@@ -22,25 +22,32 @@ export async function POST(request: Request) {
       keywords,
       uploadedFile,
       uploadedFileName,
+      isDraft = false,
     } = await request.json();
 
-    console.log("📄 Starting manuscript submission process...");
+    console.log(
+      `📄 Starting manuscript ${isDraft ? "draft save" : "submission"} process...`
+    );
     console.log(`📝 Title: ${title}`);
     console.log(`👤 Author: ${session.user?.name}`);
+    console.log(`📋 Is Draft: ${isDraft}`);
 
-    // Generate and upload PDF to Vercel Blob
-    const pdfUrl = await generateAndStorePdf(
-      content,
-      title,
-      session.user?.name || "Unknown Author"
-    );
-
-    if (!pdfUrl) {
-      console.log("❌ Failed to generate PDF");
-      return NextResponse.json(
-        { error: "Failed to generate PDF" },
-        { status: 500 }
+    // Generate and upload PDF to Vercel Blob only if not a draft or if content exists
+    let pdfUrl = null;
+    if (!isDraft && content) {
+      pdfUrl = await generateAndStorePdf(
+        content,
+        title,
+        session.user?.name || "Unknown Author"
       );
+
+      if (!pdfUrl) {
+        console.log("❌ Failed to generate PDF");
+        return NextResponse.json(
+          { error: "Failed to generate PDF" },
+          { status: 500 }
+        );
+      }
     }
 
     // Create manuscript record with error logging
@@ -53,9 +60,10 @@ export async function POST(request: Request) {
           abstract,
           content,
           keywords,
-          pdfFile: pdfUrl,
+          pdfFile: pdfUrl || "", // Provide empty string if no PDF generated
           uploadedFile: uploadedFile || null,
           uploadedFileName: uploadedFileName || null,
+          status: isDraft ? "DRAFT" : "SUBMITTED",
         },
       });
     } catch (prismaError: unknown) {
@@ -81,65 +89,67 @@ export async function POST(request: Request) {
       );
     }
 
-    // Get reviewers
-    const reviewers = await prisma.user.findMany({
-      where: { role: "REVIEWER" },
-    });
+    // Only send notifications and create reviews for submitted manuscripts, not drafts
+    if (!isDraft) {
+      // Get reviewers
+      const reviewers = await prisma.user.findMany({
+        where: { role: "REVIEWER" },
+      });
 
-    // Send notifications
-    console.log(
-      `📧 Starting email notifications for ${reviewers.length} reviewers`
-    );
-    console.log(
-      `🔑 Resend API Key configured: ${process.env.RESEND_API_KEY ? "Yes" : "No"}`
-    );
+      // Send notifications
+      console.log(
+        `📧 Starting email notifications for ${reviewers.length} reviewers`
+      );
+      console.log(
+        `🔑 Resend API Key configured: ${process.env.RESEND_API_KEY ? "Yes" : "No"}`
+      );
 
-    if (!Array.isArray(reviewers) || reviewers.length === 0) {
-      console.log("⚠️ No reviewers found. Skipping notifications.");
-    } else {
-      await Promise.all(
-        reviewers.map(async (reviewer, index) => {
-          try {
-            console.log(
-              `📝 Processing reviewer ${index + 1}/${reviewers.length}: ${reviewer.email}`
-            );
+      if (!Array.isArray(reviewers) || reviewers.length === 0) {
+        console.log("⚠️ No reviewers found. Skipping notifications.");
+      } else {
+        await Promise.all(
+          reviewers.map(async (reviewer, index) => {
+            try {
+              console.log(
+                `📝 Processing reviewer ${index + 1}/${reviewers.length}: ${reviewer.email}`
+              );
 
-            // Create review assignment
-            const review = await prisma.review.create({
-              data: {
-                manuscript_id: manuscript.id,
-                reviewer_id: reviewer.id,
-                content: `Review assignment for manuscript: ${manuscript.title}`,
-                status: "PENDING",
-              },
-            });
-            console.log(
-              `✅ Review assignment created for ${reviewer.email}:`,
-              review.id
-            );
+              // Create review assignment
+              const review = await prisma.review.create({
+                data: {
+                  manuscript_id: manuscript.id,
+                  reviewer_id: reviewer.id,
+                  content: `Review assignment for manuscript: ${manuscript.title}`,
+                  status: "PENDING",
+                },
+              });
+              console.log(
+                `✅ Review assignment created for ${reviewer.email}:`,
+                review.id
+              );
 
-            // Create dashboard notification
-            const notification = await prisma.notification.create({
-              data: {
-                id: `notif_${Date.now()}_${Math.random().toString(36).substring(7)}`,
-                userId: reviewer.id,
-                title: "New Manuscript Submitted",
-                message: `New manuscript "${manuscript.title}" from ${session.user?.name} requires your review`,
-                type: "MANUSCRIPT_SUBMISSION",
-                relatedId: manuscript.id,
-              },
-            });
-            console.log(
-              `✅ Dashboard notification created for ${reviewer.email}:`,
-              notification.id
-            );
+              // Create dashboard notification
+              const notification = await prisma.notification.create({
+                data: {
+                  id: `notif_${Date.now()}_${Math.random().toString(36).substring(7)}`,
+                  userId: reviewer.id,
+                  title: "New Manuscript Submitted",
+                  message: `New manuscript "${manuscript.title}" from ${session.user?.name} requires your review`,
+                  type: "MANUSCRIPT_SUBMISSION",
+                  relatedId: manuscript.id,
+                },
+              });
+              console.log(
+                `✅ Dashboard notification created for ${reviewer.email}:`,
+                notification.id
+              );
 
-            // Send email notification
-            const emailResult = await resend.emails.send({
-              from: "Tina Education <onboarding@resend.dev>",
-              to: reviewer.email!,
-              subject: `New Manuscript Review Request: "${manuscript.title}"`,
-              html: `
+              // Send email notification
+              const emailResult = await resend.emails.send({
+                from: "Tina Education <onboarding@resend.dev>",
+                to: reviewer.email!,
+                subject: `New Manuscript Review Request: "${manuscript.title}"`,
+                html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                   <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
                     <h2 style="color: #1e40af; margin: 0;">📝 New Manuscript Review Request</h2>
@@ -176,24 +186,27 @@ export async function POST(request: Request) {
                   </p>
                 </div>
               `,
-            });
-            console.log(
-              `✅ Email sent successfully to ${reviewer.email}:`,
-              emailResult
-            );
-          } catch (notifyErr) {
-            console.error(
-              `❌ Notification/email failed for reviewer ${reviewer.id} (${reviewer.email}):`,
-              notifyErr
-            );
-            // Log more details about the error
-            if (notifyErr instanceof Error) {
-              console.error(`Error message: ${notifyErr.message}`);
-              console.error(`Error stack: ${notifyErr.stack}`);
+              });
+              console.log(
+                `✅ Email sent successfully to ${reviewer.email}:`,
+                emailResult
+              );
+            } catch (notifyErr) {
+              console.error(
+                `❌ Notification/email failed for reviewer ${reviewer.id} (${reviewer.email}):`,
+                notifyErr
+              );
+              // Log more details about the error
+              if (notifyErr instanceof Error) {
+                console.error(`Error message: ${notifyErr.message}`);
+                console.error(`Error stack: ${notifyErr.stack}`);
+              }
             }
-          }
-        })
-      );
+          })
+        );
+      }
+    } else {
+      console.log("📋 Draft saved successfully. No notifications sent.");
     }
 
     return NextResponse.json({ success: true, manuscript });

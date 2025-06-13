@@ -20,11 +20,35 @@ interface ManuscriptViewerProps {
   };
 }
 
+// Helper functions
+const getFileExtension = (filename: string) => {
+  return filename.split(".").pop()?.toLowerCase() || "";
+};
+
+const getFileIcon = (filename: string) => {
+  const ext = getFileExtension(filename);
+  switch (ext) {
+    case "pdf":
+      return "📄";
+    case "doc":
+    case "docx":
+      return "📝";
+    default:
+      return "📎";
+  }
+};
+
 export default function ManuscriptViewer({
   manuscript,
 }: ManuscriptViewerProps) {
+  // Check if uploaded file is a PDF
+  const isUploadedPDF =
+    manuscript.uploadedFile &&
+    manuscript.uploadedFileName &&
+    getFileExtension(manuscript.uploadedFileName) === "pdf";
+
   const [viewMode, setViewMode] = useState<"content" | "pdf" | "uploaded">(
-    "content"
+    isUploadedPDF ? "uploaded" : "content"
   );
   const [fontSize, setFontSize] = useState(16);
 
@@ -40,23 +64,6 @@ export default function ManuscriptViewer({
     }
   };
 
-  const getFileExtension = (filename: string) => {
-    return filename.split(".").pop()?.toLowerCase() || "";
-  };
-
-  const getFileIcon = (filename: string) => {
-    const ext = getFileExtension(filename);
-    switch (ext) {
-      case "pdf":
-        return "📄";
-      case "doc":
-      case "docx":
-        return "📝";
-      default:
-        return "📎";
-    }
-  };
-
   return (
     <div className="h-full flex flex-col bg-white">
       {/* Viewer Controls */}
@@ -66,7 +73,9 @@ export default function ManuscriptViewer({
             <button
               onClick={() => setViewMode("content")}
               className={`px-4 py-2 text-sm font-medium ${
-                !manuscript.uploadedFile ? "rounded-lg" : "rounded-l-lg"
+                !manuscript.uploadedFile && !isUploadedPDF
+                  ? "rounded-lg"
+                  : "rounded-l-lg"
               } ${
                 viewMode === "content"
                   ? "bg-blue-500 text-white"
@@ -75,18 +84,21 @@ export default function ManuscriptViewer({
             >
               📄 Text View
             </button>
-            <button
-              onClick={() => setViewMode("pdf")}
-              className={`px-4 py-2 text-sm font-medium ${
-                !manuscript.uploadedFile ? "rounded-r-lg" : ""
-              } ${
-                viewMode === "pdf"
-                  ? "bg-blue-500 text-white"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              📋 Generated PDF
-            </button>
+            {/* Only show Generated PDF button if no uploaded PDF */}
+            {!isUploadedPDF && (
+              <button
+                onClick={() => setViewMode("pdf")}
+                className={`px-4 py-2 text-sm font-medium ${
+                  !manuscript.uploadedFile ? "rounded-r-lg" : ""
+                } ${
+                  viewMode === "pdf"
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                📋 Generated PDF
+              </button>
+            )}
             {manuscript.uploadedFile && (
               <button
                 onClick={() => setViewMode("uploaded")}
@@ -96,7 +108,8 @@ export default function ManuscriptViewer({
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                {getFileIcon(manuscript.uploadedFileName || "")} Uploaded File
+                {getFileIcon(manuscript.uploadedFileName || "")}{" "}
+                {isUploadedPDF ? "PDF Document" : "Uploaded File"}
               </button>
             )}
           </div>
@@ -122,7 +135,8 @@ export default function ManuscriptViewer({
         </div>
 
         <div className="flex items-center space-x-2">
-          {manuscript.pdfFile && (
+          {/* Only show Download Generated PDF if no uploaded PDF */}
+          {manuscript.pdfFile && !isUploadedPDF && (
             <button
               onClick={handleDownloadPDF}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"

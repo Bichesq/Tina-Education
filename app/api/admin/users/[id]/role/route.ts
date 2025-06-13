@@ -81,11 +81,7 @@ export async function PATCH(
     // Send email notification to user
     if (process.env.RESEND_API_KEY) {
       try {
-        const roleDescriptions = {
-          USER: "standard user",
-          REVIEWER: "reviewer",
-          ADMIN: "administrator",
-        };
+
 
         const emailContent = `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
