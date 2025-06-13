@@ -48,14 +48,14 @@ export async function PATCH(
     console.log(`👤 Author: ${session.user?.name}`);
 
     // Generate new PDF if content has changed
-    let pdfUrl: string | undefined;
+    let pdfUrl: string | null = null;
     try {
       pdfUrl = await generateAndStorePdf(
         content,
         title,
         session.user?.name || "Unknown Author"
       );
-      
+
       if (!pdfUrl) {
         console.log("⚠️ PDF generation failed, continuing without PDF update");
       }
@@ -65,7 +65,16 @@ export async function PATCH(
     }
 
     // Update manuscript record
-    const updateData: any = {
+    const updateData: {
+      title: string;
+      abstract: string;
+      content: string;
+      keywords: string;
+      uploadedFile: string | null;
+      uploadedFileName: string | null;
+      updatedAt: Date;
+      pdfFile?: string;
+    } = {
       title,
       abstract,
       content,

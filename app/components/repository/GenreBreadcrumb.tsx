@@ -49,16 +49,16 @@ export default function GenreBreadcrumb({
     }
     
     // Add each genre level to breadcrumb
-    genreHierarchy.forEach((g, index) => {
+    genreHierarchy.forEach((g) => {
       const isParentGenre = !g.parent;
-      const href = isParentGenre 
-        ? `/books?genre=${g.slug}` 
+      const href = isParentGenre
+        ? `/books?genre=${g.slug}`
         : `/books?genre=${g.slug}`;
-        
+
       breadcrumbItems.push({
         label: g.name,
         href,
-        isLast: false
+        isLast: false,
       });
     });
   }

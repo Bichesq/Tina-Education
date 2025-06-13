@@ -217,7 +217,7 @@ export default function WishlistPage() {
               Your wishlist is empty
             </h2>
             <p className="text-gray-700 mb-8">
-              Save books you're interested in for later!
+              Save books you&apos;re interested in for later!
             </p>
             <Link
               href="/books"

@@ -11,8 +11,8 @@ interface ManuscriptViewerProps {
     keywords: string;
     type: string;
     pdfFile: string;
-    uploadedFile: string | null;
-    uploadedFileName: string | null;
+    uploadedFile?: string | null;
+    uploadedFileName?: string | null;
     user: {
       name: string | null;
       email: string;
@@ -197,7 +197,8 @@ export default function ManuscriptViewer({
                           {manuscript.uploadedFileName}
                         </p>
                         <p className="text-sm text-gray-600">
-                          Click "Uploaded File" tab above to view this document
+                          Click &quot;Uploaded File&quot; tab above to view this
+                          document
                         </p>
                       </div>
                     </div>

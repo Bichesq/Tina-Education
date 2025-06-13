@@ -4,7 +4,7 @@ import { prisma } from "../../../prisma";
 import { Pub_type } from "@prisma/client";
 
 // GET - Get user's wishlist
-export async function GET(request: Request) {
+export async function GET() {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     });
 
     return NextResponse.json({
-      wishlistItems: wishlistItems.map(item => ({
+      wishlistItems: wishlistItems.map((item) => ({
         ...item,
         createdAt: item.createdAt.toISOString(),
         updatedAt: item.updatedAt.toISOString(),

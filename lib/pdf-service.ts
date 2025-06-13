@@ -58,7 +58,7 @@ export async function generateAndStorePdf(
     const margin = 50;
     const maxWidth = width - margin * 2;
     const lineHeight = 16;
-    let yPosition = height - 50;
+    const yPosition = height - 50;
 
     // Initialize render context
     const context: RenderContext = {
@@ -139,7 +139,7 @@ function parseHtmlContent(html: string): TextElement[] {
     .replace(/&#39;/g, "'");
 
   // First, handle inline formatting (bold, italic) by converting to markers
-  let processedHtml = cleanHtml
+  const processedHtml = cleanHtml
     .replace(
       /<(strong|b)([^>]*)>(.*?)<\/(strong|b)>/gi,
       "**BOLD_START**$3**BOLD_END**"
@@ -156,7 +156,6 @@ function parseHtmlContent(html: string): TextElement[] {
 
   let currentElement: TextElement | null = null;
   let listLevel = 0;
-  let inList = false;
 
   for (let i = 0; i < htmlParts.length; i++) {
     const part = htmlParts[i].trim();
@@ -199,10 +198,8 @@ function parseHtmlContent(html: string): TextElement[] {
         }
       } else if (tag === "ul" || tag === "ol") {
         if (!isClosing) {
-          inList = true;
           listLevel++;
         } else {
-          inList = false;
           listLevel = Math.max(0, listLevel - 1);
         }
       } else if (tag === "li") {
@@ -342,7 +339,7 @@ function drawText(
   options: {
     font: PDFFont;
     size: number;
-    color: any;
+    color: ReturnType<typeof rgb>;
     x?: number;
     maxWidth?: number;
   }
@@ -364,7 +361,7 @@ function drawWrappedText(
   options: {
     font: PDFFont;
     size: number;
-    color: any;
+    color: ReturnType<typeof rgb>;
     x: number;
     maxWidth: number;
   }
