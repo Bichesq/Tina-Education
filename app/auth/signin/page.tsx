@@ -2,13 +2,22 @@
 
 import { signIn, getProviders } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 
-export default function SignInPage() {
+function SignInContent() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
-  const [providers, setProviders] = useState<any>(null);
+  const [providers, setProviders] = useState<Record<
+    string,
+    {
+      id: string;
+      name: string;
+      type: string;
+      signinUrl: string;
+      callbackUrl: string;
+    }
+  > | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [credentials, setCredentials] = useState({
     username: "",
@@ -26,7 +35,7 @@ export default function SignInPage() {
   const handleCredentialsSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       await signIn("credentials", {
         username: credentials.username,
@@ -69,7 +78,10 @@ export default function SignInPage() {
           {/* Credentials Sign In Form */}
           <form className="space-y-6" onSubmit={handleCredentialsSignIn}>
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Username
               </label>
               <div className="mt-1">
@@ -79,7 +91,9 @@ export default function SignInPage() {
                   type="text"
                   required
                   value={credentials.username}
-                  onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                  onChange={(e) =>
+                    setCredentials({ ...credentials, username: e.target.value })
+                  }
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Enter your username"
                 />
@@ -87,7 +101,10 @@ export default function SignInPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1">
@@ -97,7 +114,9 @@ export default function SignInPage() {
                   type="password"
                   required
                   value={credentials.password}
-                  onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                  onChange={(e) =>
+                    setCredentials({ ...credentials, password: e.target.value })
+                  }
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Enter your password"
                 />
@@ -122,7 +141,9 @@ export default function SignInPage() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                <span className="px-2 bg-white text-gray-500">
+                  Or continue with
+                </span>
               </div>
             </div>
           </div>
@@ -170,5 +191,19 @@ export default function SignInPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <SignInContent />
+    </Suspense>
   );
 }

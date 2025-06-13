@@ -67,7 +67,20 @@ export default function PublicationDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const [publication, setPublication] = useState<any>(null);
+  const [publication, setPublication] = useState<{
+    id: string;
+    title: string;
+    abstract?: string;
+    content?: string;
+    cover?: string;
+    type: string;
+    user?: { name?: string };
+    genre?: {
+      name: string;
+      slug: string;
+      parent?: { name: string; slug: string };
+    };
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedType, setSelectedType] = useState<string>("BOOK"); // Default to printed copy
   const [isInWishlist, setIsInWishlist] = useState(false);

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Greeting from "../components/greeting";
 import DashboardStats from "../components/dashboard/DashboardStats";
-import RecentPublications from "../components/dashboard/RecentPublications";
+import RecentManuscripts from "../components/dashboard/RecentManuscripts";
 import RecentActivities from "../components/dashboard/RecentActivities";
 import { Suspense } from "react";
 
@@ -44,7 +44,7 @@ export default function Dashboard() {
           <div className="mb-8">
             <div className="flex justify-between items-center mb-5">
               <h2 className="text-xl font-bold text-gray-800">
-                Recent Publications
+                Recent Manuscripts
               </h2>
               <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
             </div>
@@ -69,7 +69,7 @@ export default function Dashboard() {
           </div>
         }
       >
-        <RecentPublications />
+        <RecentManuscripts />
       </Suspense>
 
       <div className="mb-8">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Pub_type } from "@prisma/client";
@@ -68,6 +68,12 @@ export default function PublicationCarousel({
   const visiblePublications = publications.slice(0, 6);
   const totalSlides = visiblePublications.length;
 
+  const nextSlide = useCallback(() => {
+    if (totalSlides <= 1) return;
+
+    setCurrentIndex((prevIndex) => prevIndex + 1);
+  }, [totalSlides]);
+
   // Auto-scroll functionality
   useEffect(() => {
     if (!isAutoPlaying || totalSlides === 0) return;
@@ -77,13 +83,7 @@ export default function PublicationCarousel({
     }, 4000); // Change slide every 4 seconds
 
     return () => clearInterval(interval);
-  }, [isAutoPlaying, totalSlides]);
-
-  const nextSlide = () => {
-    if (totalSlides <= 1) return;
-
-    setCurrentIndex((prevIndex) => prevIndex + 1);
-  };
+  }, [isAutoPlaying, totalSlides, nextSlide]);
 
   const prevSlide = () => {
     if (totalSlides <= 1) return;

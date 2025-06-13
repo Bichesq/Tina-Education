@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import AuthSect from "./authSect";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
@@ -78,7 +78,9 @@ export default function HomeNav() {
               </li>
               <li className="ml-0 md:ml-8">
                 <div className="flex justify-center items-center gap-5 mb-8 md:mb-0 relative text-gray-500">
-                  <AuthSect />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <AuthSect />
+                  </Suspense>
                 </div>
               </li>
             </ul>

@@ -67,10 +67,10 @@ export default function ReviewForm({
   ];
 
   const sections = [
-    { id: "evaluation", label: "📋 Evaluation", icon: "📋" },
-    { id: "feedback", label: "💭 Feedback", icon: "💭" },
-    { id: "recommendation", label: "⭐ Recommendation", icon: "⭐" },
-    { id: "comments", label: "💬 Comments", icon: "💬" },
+    { id: "evaluation", label: "Evaluation", icon: "📋" },
+    { id: "feedback", label: "Feedback", icon: "💭" },
+    { id: "recommendation", label: "Recommendation", icon: "⭐" },
+    { id: "comments", label: "Comments", icon: "💬" },
   ];
 
   return (

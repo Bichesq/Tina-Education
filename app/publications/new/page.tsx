@@ -251,12 +251,18 @@ export default function NewPublicationPage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
               >
                 <option value="">Select a genre</option>
-                {genres.map((genre: any) => (
-                  <option key={genre.id} value={genre.id}>
-                    {genre.parent ? `${genre.parent.name} > ` : ""}
-                    {genre.name}
-                  </option>
-                ))}
+                {genres.map(
+                  (genre: {
+                    id: string;
+                    name: string;
+                    parent?: { name: string };
+                  }) => (
+                    <option key={genre.id} value={genre.id}>
+                      {genre.parent ? `${genre.parent.name} > ` : ""}
+                      {genre.name}
+                    </option>
+                  )
+                )}
               </select>
             </div>
 

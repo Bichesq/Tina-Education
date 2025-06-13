@@ -168,19 +168,34 @@ export async function POST(request: Request) {
       }
     }
 
-    // Create the publication
-    const publication = await prisma.publication.create({
-      data: {
-        title: title.trim(),
-        abstract: abstract?.trim() || null,
-        keywords: keywords?.trim() || null,
-        type: type as Pub_type,
-        genreId: (genreId && genreId.trim()) || null,
-        cover: cover?.trim() || null,
-        fileUrl: fileUrl,
-        fileName: fileName,
-        author_id: session.user.id,
-      },
+    // Create the publication using raw SQL to work around Prisma client issue
+    console.log("📝 Creating publication with file data...");
+
+    const publicationId = `pub_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
+    // Use raw SQL to insert the publication with new fields
+    await prisma.$executeRaw`
+      INSERT INTO "Publication" (
+        id, title, abstract, keywords, type, "genreId", cover, "fileUrl", "fileName", "author_id", "createdAt", "updatedAt"
+      ) VALUES (
+        ${publicationId},
+        ${title.trim()},
+        ${abstract?.trim() || null},
+        ${keywords?.trim() || null},
+        ${type}::"Pub_type",
+        ${(genreId && genreId.trim()) || null},
+        ${cover?.trim() || null},
+        ${fileUrl},
+        ${fileName},
+        ${session.user.id},
+        NOW(),
+        NOW()
+      )
+    `;
+
+    // Fetch the created publication with relations
+    const publication = await prisma.publication.findUnique({
+      where: { id: publicationId },
       include: {
         user: {
           select: { name: true, email: true },
